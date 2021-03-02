@@ -27,8 +27,10 @@ dependencies:
   flutter_rating_bar: ^3.0.1+1
   provider: ^4.3.3
   sqflite:
-    intl: ^0.16.1
-    path_provider:
+  path_provider:
+
+
+
 
 
   # The following adds the Cupertino Icons font to your application.
