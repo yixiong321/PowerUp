@@ -348,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                     child: ListView.builder(
                       itemCount: courseList.length,
                       itemBuilder: (context, index){
-                        return courseTemplate(courseList[index].name, courseList[index].company, courseList[index].rating, courseList[index].url);
+                        return courseTemplate(courseList[index].courseTitle, courseList[index].company, courseList[index].rating, courseList[index].url);
                       }
                     ),
                   )
