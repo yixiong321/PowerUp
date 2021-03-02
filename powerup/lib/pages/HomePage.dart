@@ -129,9 +129,9 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           FilterChipWidget(chipName: '7-12',),
                           FilterChipWidget(chipName: '13-18',),
-                          FilterChipWidget(chipName: '18-35',),
-                          FilterChipWidget(chipName: '35-55',),
-                          FilterChipWidget(chipName: '55-67',),
+                          FilterChipWidget(chipName: '19-35',),
+                          FilterChipWidget(chipName: '36-55',),
+                          FilterChipWidget(chipName: '56-67',),
                         ]
                     )
                 )
