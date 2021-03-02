@@ -2,10 +2,10 @@ import 'dart:collection';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:powerup/CoursePage.dart';
+import 'package:powerup/pages/CoursePage.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:powerup/Course.dart';
+import 'package:powerup/entities/Course.dart';
 
 class HomePage extends StatefulWidget {
   @override

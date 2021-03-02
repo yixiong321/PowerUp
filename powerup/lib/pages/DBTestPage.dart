@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'user.dart';
+import '../entities/user.dart';
 import 'dart:async';
-import 'DBHelper.dart';
+import '../DBHelper.dart';
 
 class DBTestPage extends StatefulWidget {
   final String title;

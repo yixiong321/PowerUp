@@ -1,5 +1,5 @@
-import 'package:powerup/HomePage.dart';
-import 'package:powerup/Session.dart';
+import 'package:powerup/pages/HomePage.dart';
+import 'package:powerup/entities/Session.dart';
 
 class Course{
   String _courseID;

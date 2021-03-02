@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:powerup/HomePage.dart';
-import 'package:powerup/LoginController.dart';
-import 'package:powerup/RegisterPage.dart';
+import 'package:powerup/pages/HomePage.dart';
+import 'package:powerup/controllers/LoginController.dart';
+import 'package:powerup/pages/RegisterPage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
