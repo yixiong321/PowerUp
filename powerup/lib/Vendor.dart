@@ -1,45 +1,44 @@
 
 class Vendor{
   String _emailAddress;
+  String _nameOfPOC;
+  int _contactNumOfPOC;
+  String _passwordV;
+  String _busRegNum;
+  String _companyName;
+  //List<int> _vendorCourseList;
+
+  Vendor(this._emailAddress, this._nameOfPOC, this._contactNumOfPOC,
+      this._passwordV, this._busRegNum, this._companyName); //this._vendorCourseList);
+
+  Map<String,dynamic> toMap() {
+    return {
+      '_emailAddress':_emailAddress,
+      '_nameOfPOC':_nameOfPOC,
+      '_contactNumOfPOC':_contactNumOfPOC,
+      '_passwordV':_passwordV,
+      '-busRegNum':_busRegNum,
+      '_companyName':_companyName,
+      //'_vendorCourseList':_vendorCourseList,
+    };
+  }
+
+  Vendor.fromMap(Map<String,dynamic> map){
+    _emailAddress=map['_emailAddress'];
+    _nameOfPOC= map['_nameOfPOC'];
+    _contactNumOfPOC=map['_contactNumOfPOC'];
+    _passwordV=map['_passwordV'];
+    _busRegNum=map['_busRegNum'];
+    _companyName=map['_companyName'];
+    //_vendorCourseList=map['_vendorCourseList'];
+  }
+
 
   String get emailAddress => _emailAddress;
 
   set emailAddress(String value) {
     _emailAddress = value;
   }
-
-  String _nameOfPOC;
-  int _contactNumOfPOC;
-  String _passwordV;
-  String _busRegNum;
-  String _companyName;
-  List<int> _vendorCourseList;
-
-  Vendor(this.emailAddress, this.nameOfPOC, this.contactNumOfPOC,
-      this.passwordV, this.busRegNum, this.companyName, this.vendorCourseList);
-
-  Map<String,dynamic> toMap() {
-    return {
-      'emailAddress':emailAddress,
-      'nameOfPOC':nameOfPOC,
-    'contactNumOfPOC':contactNumOfPOC,
-    'passwordV':passwordV,
-    'busRegNum':busRegNum,
-    'companyName':companyName,
-    'vendorCourseList':vendorCourseList,
-    };
-  }
-
-  Vendor.fromMap(Map<String,dynamic> map){
-    emailAddress=map['emailAddress'];
-    nameOfPOC= map['nameOfPOC'];
-    contactNumOfPOC=map['contactNumOfPOC'];
-    passwordV=map['passwordV'];
-    busRegNum=map['busRegNum'];
-    companyName=map['companyName'];
-    vendorCourseList=map['vendorCourseList'];
-  }
-
   String get nameOfPOC => _nameOfPOC;
 
   set nameOfPOC(String value) {
@@ -70,9 +69,9 @@ class Vendor{
     _companyName = value;
   }
 
-  List<int> get vendorCourseList => _vendorCourseList;
+// List<int> get vendorCourseList => _vendorCourseList;
 
-  set vendorCourseList(List<int> value) {
+/*set vendorCourseList(List<int> value) {
     _vendorCourseList = value;
-  }
+  }*/
 }
