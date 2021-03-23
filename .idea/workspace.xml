@@ -1,7 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dcf9f988-0c5d-4018-a6dc-ce27fd102e00" name="Default Changelist" comment="" />
+    <list default="true" id="dcf9f988-0c5d-4018-a6dc-ce27fd102e00" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/PowerUp.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.dart_tool/package_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.dart_tool/package_config_subset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.dart_tool/version" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.flutter-plugins" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.flutter-plugins-dependencies" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.idea/powerup.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/.packages" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/android/local.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/ios/Flutter/Generated.xcconfig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/ios/Flutter/flutter_export_environment.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/ios/Runner/GeneratedPluginRegistrant.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/ios/Runner/GeneratedPluginRegistrant.m" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/lib/controllers/SearchController.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/lib/entities/Vendor.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/lib/entities/user.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/powerup/lib/pages/DBTestPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/lib/Course.dart" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/lib/entities/Course.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/lib/CoursePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/lib/pages/CoursePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/lib/DBHelper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/lib/DBHelper.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/lib/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/lib/pages/HomePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/lib/LoginController.dart" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/lib/controllers/LoginController.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/lib/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/lib/pages/LoginPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/lib/RegisterPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/lib/pages/RegisterPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/lib/Session.dart" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/lib/entities/Session.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/powerup/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/powerup/pubspec.yaml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,7 +58,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/PowerUp-lisheng/PowerUp-lisheng" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -35,5 +74,11 @@
       <updated>1614821369210</updated>
     </task>
     <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="421" y="95" key="FileChooserDialogImpl" timestamp="1614928549759">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="421" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1614928549759" />
   </component>
 </project>
