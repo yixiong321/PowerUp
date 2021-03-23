@@ -17,6 +17,23 @@ class Course{
   String _regDeadline;
   List<Session> sessionList;
 
+  Course.fromMap(Map<String,dynamic> map){
+    _courseID = map['courseID'];
+    _courseTitle = map['courseTitle'];
+    _courseDesc = map['courseDesc'];
+    _company = map['company'];
+    _rating= map['passwordU'];
+    _price = map['price'];
+    _url= map['url'];
+    _location = map['location'];
+    _ageGroup = map['ageGroup'];
+    _pocName = map['pocName'];
+    _pocContactNumber = map['pocContactNumber'];
+    _startDate = map['startDate'];
+    _regDeadline = map['regDeadline'];
+    sessionList = map['sessionList'];
+  }
+
   String get courseID => _courseID;
 
   set courseID(String value) {

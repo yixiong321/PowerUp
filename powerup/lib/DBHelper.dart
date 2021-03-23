@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' as io;
 import 'package:path/path.dart';
+import 'package:powerup/entities/Course.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'entities/user.dart';
@@ -59,6 +60,21 @@ class DBHelper {
     }
     return users;
   }
+
+  //return a list of courses form db - jess
+  Future<List<Course>> getCourses() async {
+    var dbClient = await db;
+    List<Map> maps = await dbClient.query(TABLE, columns: ['courseID', 'courseTitle']);
+    //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
+    List<Course> courses = [];
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        courses.add(Course.fromMap(maps[i]));
+      }
+    }
+    return courses;
+  }
+
 
   //delete from table SQL -yx
   Future<int> delete(int id) async {
