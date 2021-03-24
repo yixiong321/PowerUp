@@ -19,7 +19,7 @@ class Vendor{
       '_passwordV':_passwordV,
       '-busRegNum':_busRegNum,
       '_companyName':_companyName,
-      //'_vendorCourseList':_vendorCourseList,
+
     };
   }
 
@@ -30,7 +30,7 @@ class Vendor{
     _passwordV=map['_passwordV'];
     _busRegNum=map['_busRegNum'];
     _companyName=map['_companyName'];
-    //_vendorCourseList=map['_vendorCourseList'];
+
   }
 
 
@@ -69,9 +69,5 @@ class Vendor{
     _companyName = value;
   }
 
-// List<int> get vendorCourseList => _vendorCourseList;
 
-/*set vendorCourseList(List<int> value) {
-    _vendorCourseList = value;
-  }*/
 }

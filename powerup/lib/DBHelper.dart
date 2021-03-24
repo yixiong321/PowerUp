@@ -3,7 +3,9 @@ import 'dart:io' as io;
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
-import 'user.dart';
+import 'entities/user.dart';
+import 'entities/Session.dart';
+import 'entities/Course.dart';
 
 class DBHelper {
   static Database _db;
@@ -76,4 +78,58 @@ class DBHelper {
     var dbClient = await db;
     dbClient.close();
   }
+
+  //from ui create the list of sessions
+  Future<int> addCourse(Course course,List<Session> sessions) async {
+    var dbClient = await db;
+    //need to add session into sessions db first
+    int i=0;
+    while (sessions.Count !=0) {
+      await dbClient.insert(SessionDB, sessions[i].toMap());
+      i++;
+    }
+    int course_id = await dbClient.insert(CourseDB, course.toMap());
+    return course_id;
+
+  }
+
+  Future<int> deleteCourse(int CourseToRemoveID,String VendorEmail) async {
+    var dbClient = await db;
+    List<string> participantsToEmail = getParticipants(CourseToRemoveID);
+    //***
+    //email the participants with participants emails notifyParticipants
+    return await dbClient.delete(CourseDB, where: '$ID = ?', whereArgs: [CourseToRemoveID]);
+  }
+
+  Future<List<string>> getParticipantsFromCourse(int CourseToRemoveID) {
+    var dbClient = await db;
+    List<Map> map = await dbClient.rawQuery(
+        "SELECT Email FROM RegisterTABLE WHERE courseID = '" +
+            CourseToRemoveID.toString() + "';";);
+    List<string> emailList = [];
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        emailList.add(maps[i]["Email"]);
+      }
+    }
+    return emailList;
+  }
+  Future<List<string>> getParticipantsFromSession(int courseID,int sessionID) {
+    var dbClient = await db;
+    List<Map> map = await dbClient.rawQuery(
+        "SELECT Email FROM RegisterTABLE WHERE courseID = '" +
+            CourseID.toString()+" AND sessionID = '"+sessionID.toString()+ "';");
+    List<string> emailList = [];
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        emailList.add(maps[i]["Email"]);
+      }
+    }
+    return emailList;
+  }
+
+  void Participants(){
+
+  }
+
 }

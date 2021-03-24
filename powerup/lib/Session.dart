@@ -37,4 +37,6 @@ class Session{
   set vacancy(int value) {
     _vacancy = value;
   }
+  }
+
 }
