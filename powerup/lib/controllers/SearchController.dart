@@ -1,5 +1,4 @@
 import 'dart:core';
-
 import 'package:powerup/DBHelper.dart';
 import 'package:powerup/entities/Course.dart';
 

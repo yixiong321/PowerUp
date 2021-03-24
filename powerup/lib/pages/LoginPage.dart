@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:powerup/pages/HomePage.dart';
-import 'package:powerup/controllers/LoginController.dart';
+import 'package:powerup/controllers/LoginRegisterController.dart';
 import 'package:powerup/pages/RegisterPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                                   onPressed: (){
                                     FocusScope.of(context).requestFocus(FocusNode());
                                     if(_formKey.currentState.validate()){
-                                      if(LoginController.accountInDB(email.text, password.text)){
+                                      if(LoginRegisterController.accountInDB(email.text, password.text)){
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (context) => HomePage())
