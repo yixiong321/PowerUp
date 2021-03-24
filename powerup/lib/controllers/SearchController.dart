@@ -7,16 +7,11 @@ class SearchController {
   /// which contain the search term either within their course title, description
   /// or company name.
 
-  Future<List<Course>> search(String search_term) async {
+  Future<List<Course>> searchAllCourses(String search_term) async {
     List<Course> search_results;
     DBHelper db_helper = new DBHelper();
     db_helper.getCourses().then((List<Course>courses) {
-      for (Course course in courses) {
-        if(course.courseTitle.contains(search_term)||
-            course.courseDesc.contains(search_term)||
-            course.company.contains(search_term))
-          search_results.add(course);
-      }
+      search_results = search(search_term, courses);
     });
     return search_results;
   }
@@ -26,15 +21,15 @@ class SearchController {
 
   /// Searches through filtered results to return list of courses which contain
   /// the search term either within their course title, description, or company name.
-  List<Course> fSearch(String search_term, List<Course> listofCourses){
-    List<Course> fsearch_results;
+  List<Course> search(String search_term, List<Course> listofCourses){
+    List<Course> search_results;
     for(Course course in listofCourses){
       if(course.courseTitle.contains(search_term)||
           course.courseDesc.contains(search_term)||
           course.company.contains(search_term))
-        fsearch_results.add(course);
+        search_results.add(course);
     }
-    return fsearch_results;
+    return search_results;
   }
 
   /// Filters through list of courses/search results to return list of courses which
