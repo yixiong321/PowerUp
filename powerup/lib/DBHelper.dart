@@ -401,4 +401,29 @@ class DBHelper {
     var dbClient = await db;
     dbClient.close();
   }
+  /// This function adds sessions into the session database and adds a course into the course database
+  Future<bool> addCourse(Course course,List<Session> sessions) async {
+    for(int i=0;i<sessions.length;i++){
+      await saveSession(sessions[i]);
+    }
+    await saveCourse(course);
+    return true;
+  }
+  /// This function gets the email addresses of the participants of a course and sends them a notification.
+  /// before removing the relevant data from respective tables.
+  Future<bool> removeCourse(int courseID,String vendorEmail ) async{
+    List<Session> sessions = await getSessionsByCourse(courseID);
+    for(int j=0;j<sessions.length;j++){
+      List<String> emails = await getRegisterBySession(sessions[j].sessionID);
+      for (int k=0;k<emails.length;k++){
+        //send email to notify participant
+      }
+    }
+    for(int i=0;i<sessions.length;i++){
+      deleteSession(sessions[i].sessionID,courseID);
+    }
+    await deleteRegisterByCourse(courseID);
+    await deleteCourse(courseID);
+    return true;
+  }
 }
