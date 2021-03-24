@@ -23,10 +23,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.16.1
+  intl: ^0.17.0
   flutter_rating_bar: ^3.0.1+1
   provider: ^4.3.3
   sqflite:
+  crypto: ^3.0.0
+  mailer: any
+  email_validator: '^1.0.6'
   path_provider:
 
   # The following adds the Cupertino Icons font to your application.
