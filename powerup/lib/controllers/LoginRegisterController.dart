@@ -6,7 +6,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:powerup/DBHelper.dart';
-import 'package:powerup/entities/user.dart';
+import 'package:powerup/entities/User.dart';
 
 class LoginRegisterController{
 
@@ -72,7 +72,7 @@ class LoginRegisterController{
       final bool isValid = EmailValidator.validate(email);
       if (isValid == true) {
         /// format is okay, check database for match
-        var users = await DBHelper().getUsers();  /// Get list of User objects
+        var users = await DBHelper().getAllUsers();  /// Get list of User objects
         /// check if the id attribute matches
         for (int i = 0; i < users.length; i++) {
           if (users[i].emailAddress == email)
@@ -147,7 +147,7 @@ class LoginRegisterController{
     /// Perform hashing for comparison with stored password later
     String hashedPassword = generateHash(password);
     try {
-      var accounts = await DBHelper().getUsernamePassword();
+      var accounts = await DBHelper().getAllUsers();
       for (int i = 0; i < accounts.length; i++) {
           if (accounts[i].emailAddress == username){
             if (accounts[i].passwordU == hashedPassword)
@@ -203,7 +203,7 @@ class LoginRegisterController{
     /// Format data in User object to pass to DB class so that DBHelper can write to DB under one single user
     try {
       User user = new User(name, dob, email, contactNum, hashedPassword, nokName, nokContactNum);
-      User saveResult = await DBHelper().save(user);
+      User saveResult = await DBHelper().saveUser(user);
     } catch (e) {
       print(e);
       return "-1";

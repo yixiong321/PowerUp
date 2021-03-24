@@ -31,8 +31,13 @@ class _RegisterPageState extends State<RegisterPage> {
     TextEditingController companyEmail = TextEditingController();
     TextEditingController companyPassword = TextEditingController();
     TextEditingController companyConfirmPassword = TextEditingController();
-    var _formKey1 = GlobalKey<FormState>();
-    var _formKey2 = GlobalKey<FormState>();
+
+    DateTime dobDT;
+    int yearOfUser;
+    bool dobFormat;
+    int yearNow = int.parse(DateFormat('yyyy').format(DateTime.now()));
+    final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
+    final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -65,7 +70,6 @@ class _RegisterPageState extends State<RegisterPage> {
           body: TabBarView(
             children: [
               Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey1,
                 child: Padding(
                   padding: EdgeInsets.all(30),
@@ -84,16 +88,22 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               controller: dob,
                               validator: (string){
+                                dobFormat = false;
                                 if(string.isEmpty){
                                   return 'Compulsory field cannot be empty';
                                 }
                                 try{
-                                  DateFormat('yyyy/MM/dd').format(DateTime.parse(string));
+                                  dobDT = DateFormat('dd/MM/yyyy').parseStrict(string);
+                                  yearOfUser = int.parse(DateFormat('yyyy').format(dobDT));
+                                  if(yearOfUser >= 1900 && yearOfUser < yearNow){
+                                    dobFormat = true;
+                                    return null;
+                                  }
+                                  return 'Wrong date format';
                                 } catch(e){
-
+                                  return 'Wrong date format';
                                 }
-                                return null;
-                              },
+                                },
                               decoration: InputDecoration(
                                   hintText: "DD/MM/YYYY",
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
@@ -108,13 +118,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               maxLength: 8,
                               controller: contactNumber,
                               validator: (string){
-                                if(string.isEmpty) {
+                                if(string.isEmpty){
                                   return 'Compulsory field cannot be empty';
-                                }
-                                try{
-                                  int.parse(string);
-                                } catch(e){
-                                  return 'Enter a valid number';
                                 }
                                 return null;
                               },
@@ -154,6 +159,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         Container(
                             child: TextFormField(
                               controller: nokName,
+                              validator: (string){
+                                if(dobFormat && yearNow - yearOfUser <= 12){
+                                  return 'Compulsory field cannot be empty';
+                                }
+                                return null;
+                              },
                               decoration: InputDecoration(
                                   hintText: 'For children <12 years old',
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
@@ -165,6 +176,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         Container(
                             child: TextFormField(
                               controller: nokContact,
+                              validator: (string){
+                                if(yearNow - yearOfUser <= 12){
+                                  return 'Compulsory field cannot be empty';
+                                }
+                                return null;
+                              },
                               decoration: InputDecoration(
                                   hintText: 'For children <12 years old',
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
@@ -204,7 +221,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 )
               ),
               Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey2,
               child: Padding(
               padding: EdgeInsets.all(30),
@@ -308,6 +324,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           builder: (context) => HomePage())
                                   );
                                 }
+                                return;
                               }),
                         )
                       ]

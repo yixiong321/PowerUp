@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:powerup/user.dart';
-import 'package:powerup/Course.dart';
+import 'package:powerup/entities/Course.dart';
 import 'dart:async';
-import 'DBHelper.dart';
+import 'package:powerup/DBHelper.dart';
 
 
 /// This controller handles sending validation email and changing of password for user.
