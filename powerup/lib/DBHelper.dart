@@ -6,22 +6,24 @@ import 'package:path_provider/path_provider.dart';
 import 'package:powerup/Course.dart';
 import 'package:powerup/User.dart';
 import 'package:powerup/Vendor.dart';
+import 'package:powerup/Session.dart';
 
 class DBHelper {
+  //DATABASE
   static Database _db;
   static const String DB_NAME = 'MainDB.db';
 
-  //USER_TABLE
+  //User Table
   static const String UserTABLE = 'User';
-  static const String NAME = 'name';
-  static const String DOB = 'DOB';
-  static const String Email = 'emailAddress';
+  static const String name = 'name';
+  static const String dob = 'DOB';
+  static const String email = 'emailAddress';
   static const String contactNum = 'contactNum';
   static const String passU='passwordU';
   static const String NOKname='NOKname';
   static const String NOKNum = 'NOKcontactNum';
 
-  //VENDOR_TABLE
+  //Vendor Table
   static const String VendorTABLE = 'Vendor';
   static const String POCName = 'nameOfPOC';
   static const String POCNum = 'contactNumOfPOC';
@@ -29,26 +31,40 @@ class DBHelper {
   static const String busRegNum='busRegNum';
   static const String compName = 'companyName';
 
-  //COURSE_TABLE
-  static const String COURSE_TABLE = 'Course';
-  static const String COURSE_ID = 'courseID';
-  static const String COURSE_TITLE = 'courseTitle';
-  static const String COURSE_DESC = 'courseDesc';
-  static const String COMPANY = 'company';
-  static const String RATING = 'rating';
-  static const String PRICE = 'price';
-  static const String URL = 'url';
-  static const String LOCATION = 'location';
-  static const String AGE_GROUP = 'ageGroup';
-  static const String POC_NAME = 'pocName';
-  static const String POC_CONTACT_NUMBER = 'pocContactNumber';
-  static const String START_DATE = 'startDate';
-  static const String REG_DEADLINE = 'regDeadline';
+  //Course Table
+  static const String CourseTABLE = 'Course';
+  static const String courseID = 'courseID';
+  static const String courseTitle = 'courseTitle';
+  static const String courseDesc = 'courseDesc';
+  //static const String compName = 'companyName';
+  static const String rating = 'rating';
+  static const String price = 'price';
+  static const String url = 'url';
+  static const String location = 'location';
+  static const String ageGroup = 'ageGroup';
+  //static const String POCName = 'nameOfPOC';
+  //static const String POCNum = 'contactNumOfPOC';
+  static const String startDate = 'startDate';
+  static const String regDeadline = 'regDeadline';
 
-  //FAV_TABLE
-  static const String FAV_TABLE = 'Favourite';
+  //Fav Table
+  static const String FavTABLE = 'Favourite';
 
-  //if db empty(first time), initialize db else return current db-yx
+  //Session Table
+  static const String SessionTABLE = 'Session';
+  static const String sessionID = 'sessionID';
+  //static const String CID = 'courseID'; //check in Course
+  static const String numberOfClasses = 'numberOfClasses';
+  static const String startDateOfSession = 'startDate';
+  static const String dateTime = 'dateTime';
+  static const String vacancy = 'vacancy';
+  static const String classSize = 'classSize';
+
+  //Register
+  static const String RegisterTABLE = 'Register';
+
+  /// This function initializes a new database when the current database is null,
+  /// and returns the current database when it is not null
   Future<Database> get db async {
     if (_db != null) {
       return _db;
@@ -56,21 +72,29 @@ class DBHelper {
     _db = await initDb();
     return _db;
   }
-  //initialize a new db-yx
+
+  /// This function enables foreign key support
+  static Future _onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
+  }
+
+  /// If the current database is not null, this function executes to retrieve the
+  /// current database
   initDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_NAME);
-    var db = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var db = await openDatabase(path, version: 1, onCreate: _onCreate, onConfigure: _onConfigure);
     return db;
   }
 
+  /// This function creates all the tables for the database
   _onCreate(Database db, int version) async {
     await db
-        .execute("CREATE TABLE $UserTABLE ($NAME TEXT,"
-        "$DOB TEXT,$Email TEXT PRIMARY KEY,$contactNum INTEGER,$passU TEXT,"
+        .execute("CREATE TABLE $UserTABLE ($name TEXT,"
+        "$dob TEXT,$email TEXT PRIMARY KEY,$contactNum INTEGER, $passU TEXT,"
         "$NOKname TEXT,$NOKNum INTEGER)");
 
-    await db.execute("CREATE TABLE $VendorTABLE ($Email TEXT PRIMARY KEY,"
+    await db.execute("CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY,"
         "$POCName TEXT,"
         "$POCNum INTEGER,"
         "$passV TEXT,"
@@ -78,42 +102,72 @@ class DBHelper {
         "$compName TEXT");
 
     await db.execute(
-        "CREATE TABLE $COURSE_TABLE ($COURSE_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COURSE_TITLE TEXT, $COURSE_DESC TEXT, $COMPANY TEXT, $RATING REAL, $PRICE REAL, $URL TEXT, $LOCATION TEXT, $AGE_GROUP TEXT, $POC_NAME TEXT, $POC_CONTACT_NUMBER INTEGER, $START_DATE TEXT, $REG_DEADLINE TEXT,)");
+        "CREATE TABLE $CourseTABLE ($courseID INTEGER PRIMARY KEY, $courseTitle TEXT, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup TEXT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT)");
 
     await db.execute(
-        "CREATE TABLE $FAV_TABLE (FOREIGN KEY ($Email) REFERENCES $UserTABLE($Email) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY ($COURSE_ID) REFERENCES $COURSE_TABLE($COURSE_ID) ON DELETE CASCADE ON UPDATE CASCADE");
+        "CREATE TABLE $FavTABLE ($email TEXT PRIMARY KEY, $courseID INTEGER PRIMARY KEY, FOREIGN KEY ($email) REFERENCES $UserTABLE($email) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY ($courseID) REFERENCES $CourseTABLE($courseID) ON DELETE CASCADE ON UPDATE CASCADE");
+
+    await db //Session
+        .execute("CREATE TABLE $SessionTABLE ($sessionID INTEGER PRIMARY KEY, "
+        "$courseID INTEGER PRIMARY KEY, $startDateOfSession TEXT, $dateTime TEXT, "
+        "$vacancy INTEGER, $classSize INTEGER, "
+        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID) ON UPDATE CASCADE ON DELETE CASCADE");
+
+    await db //Register
+        .execute("CREATE TABLE $RegisterTABLE ($email TEXT PRIMARY KEY, $sessionID INTEGER PRIMARY KEY, $courseID INTEGER PRIMARY KEY,"
+        "FOREIGN KEY($email) REFERENCES $UserTABLE($email) ON UPDATE CASCADE ON DELETE CASCADE,"
+        "FOREIGN KEY($sessionID) REFERENCES $SessionTABLE($sessionID) ON UPDATE CASCADE ON DELETE CASCADE,"
+        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID) ON UPDATE CASCADE ON DELETE CASCADE");
   }
-  //SAVE
+  /// This function saves a Course object into the CourseTABLE
   Future<Course> saveCourse(Course course) async {
     var dbClient = await db;
-    await dbClient.insert(COURSE_TABLE, course.toMap());
+    await dbClient.insert(CourseTABLE, course.toMap());
     return course;
   }
 
+  /// This function saves a User object into the UserTABLE
   Future<User> saveUser(User user) async {
     var dbClient = await db;
     await dbClient.insert(UserTABLE, user.toMap());
     return user;
   }
 
+  /// This function saves a Vendor object into the VendorTABLE
   Future<Vendor> saveVendor(Vendor vendor) async{
     var dbClient = await db;
     await dbClient.insert(VendorTABLE, vendor.toMap());
     return vendor;
   }
 
-  Future<bool> saveFavourite(User user, Course course) async{
+  /// This function saves a User's email address and the courseID of his favourite
+  /// course into the FavTABLE
+  Future<bool> saveFavourite(String email, int courseID) async{
     var dbClient = await db;
-    String email = user.emailAddress;
-    int courseID = course.courseID;
-    await dbClient.execute("INSERT INTO $FAV_TABLE VALUES email, courseID");
+    await dbClient.execute("INSERT INTO $FavTABLE VALUES email, courseID");
     return true;
   }
 
-  //GET
-  Future<List<Course>> getCourses() async {
+  /// This function saves a Session object into the SessionTABLE
+  Future<Session> saveSession(Session session) async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $COURSE_TABLE");
+    await dbClient.insert(SessionTABLE, session.toMap());
+    return session;
+  }
+
+  /// This function saves a User's email address, his registered sessionID and
+  /// the courseID of the Session into the RegisterTABLE
+  Future<bool> saveRegister(int courseID, int sessionID, String userEmail) async { //pass in three objects
+    var dbClient = await db;
+    await dbClient.rawInsert("INSERT INTO registerTable(email, sessionID, courseID) VALUES(?,?)', "
+        "[userEmail, sessionID, courseID]");
+    return true;
+  }
+
+  /// This function returns a list of all Courses from the CourseTABLE
+  Future<List<Course>> getAllCourses() async {
+    var dbClient = await db;
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $CourseTABLE");
     List<Course> courses = [];
     if(maps.length > 0){
       for(int i = 0; i < maps.length; i++){
@@ -123,9 +177,23 @@ class DBHelper {
     return courses;
   }
 
-  Future<List<User>> getUsers() async {
+  /// This function returns a Course object given a courseID from the CourseTABLE
+  Future<Course> getCourseById(int courseID) async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(UserTABLE, columns: [NAME,DOB,Email,contactNum,passU,NOKname,NOKNum]);
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $CourseTABLE WHERE courseID = ?", [courseID]);
+    List<Course> courses = [];
+    if(maps.length > 0){
+      for(int i = 0; i < maps.length; i++){
+        courses.add(Course.fromMap(maps[i]));
+      }
+    }
+    return courses[0];
+  }
+
+  /// This function returns a list of all Users from the UserTABLE
+  Future<List<User>> getAllUsers() async {
+    var dbClient = await db;
+    List<Map> maps = await dbClient.query(UserTABLE, columns: [name,dob,email,contactNum,passU,NOKname,NOKNum]);
     //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
     List<User> users = [];
     if (maps.length > 0) {
@@ -136,9 +204,10 @@ class DBHelper {
     return users;
   }
 
-  Future<List<Vendor>> getVendors() async {
+  /// This function returns a list of all Vendors from the VendorTABLE
+  Future<List<Vendor>> getAllVendors() async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(VendorTABLE, columns: [Email,POCName,POCNum,passV,busRegNum,compName]);
+    List<Map> maps = await dbClient.query(VendorTABLE, columns: [email,POCName,POCNum,passV,busRegNum,compName]);
     //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
     List<Vendor> vendors = [];
     if (maps.length > 0) {
@@ -149,10 +218,10 @@ class DBHelper {
     return vendors;
   }
 
-  Future<List<Course>> getFavourites(User user) async {
+  /// This function returns a list of favourite courses given a User's email address
+  Future<List<Course>> getFavForUser(String email) async {
     var dbClient = await db;
-    String email = user.emailAddress;
-    List<Map> maps = await dbClient.rawQuery("SELECT $COURSE_ID FROM $FAV_TABLE WHERE $COURSE_ID = ? ", [email]);
+    List<Map> maps = await dbClient.rawQuery("SELECT $courseID FROM $FavTABLE WHERE $courseID = ? ", [email]);
     List<Course> courses = [];
     if(maps.length > 0){
       for(int i = 0; i < maps.length; i++){
@@ -162,44 +231,172 @@ class DBHelper {
     return courses;
   }
 
-  //DELETE
-  Future<int> deleteCourse(int courseID) async {
+  /// This function returns a list of Sessions from the SessionTABLE
+  Future<List<Session>> getAllSessions() async {
     var dbClient = await db;
-    return await dbClient.delete(COURSE_TABLE, where: '$COURSE_ID = ?', whereArgs: [courseID]);
+    List<Map> maps = await dbClient.query(SessionTABLE, columns: [sessionID, numberOfClasses, startDateOfSession, dateTime, vacancy, classSize ]);
+    //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
+    List<Session> sessions = []; //to store entries into a list of <objects>
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        sessions.add(Session.fromMap(maps[i]));
+      }
+    }
+    return sessions;
+  }
+  /// This function returns a list of Session objects given a courseID from the
+  /// SessionTABLE
+  Future<List<Session>> getSessionsByCourse(int courseID) async {
+    var dbClient = await db;
+    List<Map> maps = await dbClient.rawQuery(
+        "SELECT * FROM $SessionTABLE WHERE courseID = ?", [courseID]);
+    List<Session> sessions = []; //to store entries into a list of <objects>
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        sessions.add(Session.fromMap(maps[i]));
+      }
+    }
+    return sessions;
   }
 
-  Future<int> deleteUser(String emailAddress) async {
+  /// This function returns a list of email addresses of Users registered in a
+  /// Session from the RegisterTABLE
+  Future<List<String>> getRegisterBySession(int sessionID) async {
+    var dbClient = await db;
+    List<Map> maps = await dbClient.rawQuery(
+      "SELECT email FROM $RegisterTABLE WHERE sessionID = ?", [sessionID]);
+    List<String> register = []; //users who have registered for a session
+    if(maps.length > 0){
+      for(int i = 0; i < maps.length; i++){
+          register.add(maps[i]['email']);
+      }
+    }
+    return register;
+  }
+
+  /// This function returns a list of Course objects that a User registered from
+  /// the RegisterTABLE
+  Future<List<Course>> getRegisterByUser(String userEmail) async {
+    var dbClient = await db;
+    List<Map> maps = await dbClient.rawQuery(
+      "SELECT courseID from RegisterTABLE WHERE email = ?", [userEmail]);
+    List<Course> courseList = [];
+    if(maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        Course course = await getCourseById(maps[i]['courseID']);
+        courseList.add(course);
+      }
+    }
+    return courseList;
+  }
+
+  /// This function deletes a Course object given a courseID from the CourseTABLE
+  Future<bool> deleteCourse(int courseID) async {
+    var dbClient = await db;
+    await dbClient.delete(CourseTABLE, where: '$courseID = ?', whereArgs: [courseID]);
+    return true;
+  }
+
+  /// This function deletes a User object given a User's email address from the
+  /// UserTABLE
+  Future<bool> deleteUser(String emailAddress) async {
     var dbClient = await db;
     //delete will return the number of rows affected
-    await dbClient.delete(UserTABLE, where: '$Email = ?', whereArgs: [emailAddress]);
-    return 1;
+    await dbClient.delete(UserTABLE, where: '$email = ?', whereArgs: [emailAddress]);
+    return true;
   }
 
-  Future<int> deleteVendor(String emailAddress) async {
+  /// This function deletes a Vendor object given a Vendor's email address from
+  /// the VendorTABLE
+  Future<bool> deleteVendor(String emailAddress) async {
     var dbClient = await db;
     //delete will return the number of rows affected
-    await dbClient.delete(VendorTABLE, where: '$Email = ?', whereArgs: [emailAddress]);
-    return 1;
+    await dbClient.delete(VendorTABLE, where: '$email = ?', whereArgs: [emailAddress]);
+    return true;
   }
 
-  //UPDATE
-  Future<int> update(Course course) async {
+  /// This function deletes a Course object given a User's email address from
+  /// the FavTABLE
+  Future<bool> deleteFavCourseByUser(String emailAddress, int courseID) async {
     var dbClient = await db;
-    return await dbClient.update(COURSE_TABLE, course.toMap(),
-      where: '$COURSE_ID = ?', whereArgs: [course.courseID]);
+    await dbClient.rawDelete("SELECT * FROM FavTABLE WHERE email = ? AND courseID = ?", [emailAddress, courseID]);
+    return true;
   }
 
-  Future<int> updateUser(User user) async {
+  /// This function deletes a Session object given a sessionID and courseID
+  /// from the SessionTABLE
+  Future<bool> deleteSession(int sessionID, int courseID) async {
     var dbClient = await db;
-    return await dbClient.update(UserTABLE, user.toMap(),
-        where: '$Email = ?', whereArgs: [user.emailAddress]);
-  }
-  Future<int> updateVendor(Vendor vendor) async {
-    var dbClient = await db;
-    return await dbClient.update(VendorTABLE, vendor.toMap(),
-        where: '$Email = ?', whereArgs: [vendor.emailAddress]);
+    await dbClient.rawDelete("SELECT * FROM sessionTable WHERE sessionID = ? AND courseID = ?", [sessionID, courseID]);
+    return true;
   }
 
+  /// This function deletes all the courseID from the RegisterTABLE when the
+  /// courseID is removed
+  Future<bool> deleteRegisterByCourse(int courseID) async {
+    var dbClient = await db;
+    await dbClient.rawDelete("SELECT * FROM registerTable WHERE courseID = ?", [courseID]);
+    return true;
+  }
+
+  /// This function deletes a User's email address from the RegisterTABLE when
+  /// the User withdraws from a Course
+  Future<bool> deleteRegisterByUser(String userEmail, int courseID) async {
+    var dbClient = await db;
+    await dbClient.rawDelete("SELECT * FROM registerTable WHERE email = ? AND courseID = ?", [userEmail, courseID]);
+    return true;
+  }
+
+  /// This function deletes all the sessionID from the RegisterTABLE when the
+  /// sessionID is removed
+  Future<bool> deleteRegisterBySession(int sessionID) async {
+    var dbClient = await db;
+    await dbClient.rawDelete("SELECT * FROM registerTable WHERE sessionID = ?", [sessionID]);
+    return true;
+  }
+
+  /// This function updates the Course object in the CourseTABLE
+  Future<bool> updateCourse(Course course) async {
+    var dbClient = await db;
+    await dbClient.update(CourseTABLE, course.toMap(),
+      where: '$courseID = ?', whereArgs: [course.courseID]);
+    return true;
+  }
+
+  /// This function updates the User object in the UserTABLE
+  Future<bool> updateUser(User user) async {
+    var dbClient = await db;
+    await dbClient.update(UserTABLE, user.toMap(),
+        where: '$email = ?', whereArgs: [user.emailAddress]);
+    return true;
+  }
+
+  /// This function updates the Vendor object in the VendorTABLE
+  Future<bool> updateVendor(Vendor vendor) async {
+    var dbClient = await db;
+    await dbClient.update(VendorTABLE, vendor.toMap(),
+        where: '$email = ?', whereArgs: [vendor.emailAddress]);
+    return true;
+  }
+
+  /// This function updates the Session object in the SessionTABLE
+  Future<bool> updateSession(Session session) async {
+    var dbClient = await db;
+    await dbClient.update(SessionTABLE, session.toMap(),
+        where: 'SID = ?', whereArgs: [session.sessionID]);
+    return true;
+  }
+
+  /// This function updates the RegisterTABLE when a new User registers for a
+  /// Course/Session
+  Future<bool> updateRegister(int courseID, int sessionID, String userEmail) async {
+    var dbClient = await db;
+    await dbClient.rawUpdate('UPDATE registerTable SET email = ? '
+        'WHERE sessionID = ? AND coursID = ?', [sessionID, courseID]); //IMPT: only updating usermail
+    return true;
+  }
+
+  /// This function closes the database
   Future close() async {
     var dbClient = await db;
     dbClient.close();

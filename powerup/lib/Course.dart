@@ -12,7 +12,7 @@ class Course{
   String _location;
   String _ageGroup;
   String _pocName;
-  String _pocContactNumber;
+  int _pocContactNumber;
   String _startDate;
   String _regDeadline;
   List<Session> sessionList;
@@ -31,7 +31,7 @@ class Course{
       this._pocContactNumber,
       this._startDate,
       this._regDeadline,
-      this.sessionList);
+      );
 
   Course.forMain(String name, String company, double rating, String url){
     this._courseTitle = name;
@@ -52,7 +52,7 @@ class Course{
     'location' : _location,
     'ageGroup' : _ageGroup,
     'pocName' : _pocName,
-    pocContactNumber : _pocContactNumber,
+    'pocContactNumber' : _pocContactNumber,
     'startDate' : _startDate,
     'regDeadline' : _regDeadline,
     };
@@ -134,9 +134,9 @@ class Course{
     _pocName = value;
   }
 
-  String get pocContactNumber => _pocContactNumber;
+  int get pocContactNumber => _pocContactNumber;
 
-  set pocContactNumber(String value) {
+  set pocContactNumber(int value) {
     _pocContactNumber = value;
   }
 
@@ -150,15 +150,5 @@ class Course{
 
   set regDeadline(String value) {
     _regDeadline = value;
-  }
-
-  static List<Course> search(String query, List<Course> courseList){
-    List<Course> results = new List<Course>();
-    for(int i = 0; i < courseList.length; i++){
-      if(courseList[i]._courseTitle == query) {
-        results.add(courseList[i]);
-      }
-    }
-    return results;
   }
 }
