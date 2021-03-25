@@ -3,9 +3,9 @@ import 'package:powerup/entities/Course.dart';
 import 'package:powerup/DBHelper.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 class SearchController {
-  /// Searches through entire list of courses to return list of courses
-  /// which contain the search term either within their course title or company
-  /// name.
+
+  /// Searches through entire list of courses using the general use search function,
+  /// to return a list of courses related to the search term.
 Future<List<Course>> searchAllCourses(String search_term) async {
     List<Course> search_results;
     DBHelper db_helper = new DBHelper();
@@ -14,6 +14,11 @@ Future<List<Course>> searchAllCourses(String search_term) async {
     });
     return search_results;
   }
+
+  /// General use search function which searches through the list of courses
+  /// passed to it as an argument (either full list of courses or filtered list)
+  /// to return list of courses which contain the search term either within their
+  /// course title, description or company name.
 List<Course> search(String search_term, List<Course> listofCourses){
     List<Course> search_results;
     for(Course course in listofCourses){
@@ -93,6 +98,10 @@ List<Course> search(String search_term, List<Course> listofCourses){
     }
     return courseList;
   }
+
+  /// Orders the list of courses by order_choice =
+  /// 1: price, ascending 2: price, descending 3: rating 4: popularity
+  // popularity to be implemented
   List<Course> orderBy (int order_choice, List<Course> listofCourses){
     switch(order_choice){
       case 1:
