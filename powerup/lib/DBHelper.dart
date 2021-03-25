@@ -426,4 +426,8 @@ class DBHelper {
     await deleteCourse(courseID);
     return true;
   }
+
+  /// This function deletes a User from a Session from the SessionTABLE
+  Future<bool>deleteUserFromSession(String userEmail, int sessionID){
+  }
 }
