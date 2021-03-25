@@ -3,10 +3,10 @@ import 'dart:io' as io;
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:powerup/Course.dart';
-import 'package:powerup/User.dart';
-import 'package:powerup/Vendor.dart';
-import 'package:powerup/Session.dart';
+import 'package:powerup/entities/Course.dart';
+import 'package:powerup/entities/User.dart';
+import 'package:powerup/entities/Vendor.dart';
+import 'package:powerup/entities/Session.dart';
 
 class DBHelper {
   //DATABASE
