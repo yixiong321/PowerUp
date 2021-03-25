@@ -83,6 +83,7 @@ class _HomePageState extends State<HomePage> {
       )
     );
   }
+  /*
   Widget filterWindow() {
     return SingleChildScrollView(
       child: Column(
@@ -215,7 +216,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
