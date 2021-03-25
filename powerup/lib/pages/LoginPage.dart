@@ -8,6 +8,7 @@ import 'package:powerup/pages/RegisterPage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
+  /// This function displays the Login Page
   _LoginPageState createState() => _LoginPageState();
 }
 

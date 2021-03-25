@@ -1,5 +1,6 @@
 class VendorProfile extends StatefulWidget {
   @override
+  /// This function displays the Vendor Profile Page
   _VendorProfileState createState() => _VendorProfileState();
 }
 

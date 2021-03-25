@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class CoursePage extends StatefulWidget {
   @override
+  /// This function displays the Course Page
   _CoursePageState createState() => _CoursePageState();
 }
 

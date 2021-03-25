@@ -1,5 +1,6 @@
 class CreateCoursePage extends StatefulWidget {
   @override
+  /// This function displays the page to create a new course
   _CreateCoursePageState createState() => _CreateCoursePageState();
 }
 

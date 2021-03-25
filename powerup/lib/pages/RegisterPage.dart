@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
+  /// This function displays the Registration Page
   _RegisterPageState createState() => _RegisterPageState();
 }
 

@@ -9,6 +9,7 @@ import 'package:powerup/entities/Course.dart';
 
 class HomePage extends StatefulWidget {
   @override
+  /// This function displays the Home Page
   _HomePageState createState() => _HomePageState();
 }
 

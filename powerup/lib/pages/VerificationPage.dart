@@ -1,5 +1,6 @@
 class VerificationPage extends StatefulWidget {
   @override
+  /// This function displays the Verification Page
   _VerificationPageState createState() => _VerificationPageState();
 }
 
