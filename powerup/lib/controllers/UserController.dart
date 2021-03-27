@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:powerup/entities/user.dart';
+import 'package:powerup/entities/User.dart';
 import 'package:powerup/entities/Course.dart';
 import 'dart:async';
 import 'package:powerup/DBHelper.dart';
