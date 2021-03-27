@@ -94,31 +94,30 @@ class DBHelper {
         "$dob TEXT,$email TEXT PRIMARY KEY,$contactNum INTEGER, $passU TEXT,"
         "$NOKname TEXT,$NOKNum INTEGER)");
 
-    await db.execute("CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY,"
-        "$POCName TEXT,"
-        "$POCNum INTEGER,"
-        "$passV TEXT,"
-        "$busRegNum TEXT,"
-        "$compName TEXT");
+    await db.execute("CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY, $POCName TEXT, $POCNum INTEGER, $passV TEXT, $busRegNum TEXT, $compName TEXT)");
 
     await db.execute(
-        "CREATE TABLE $CourseTABLE ($courseID INTEGER PRIMARY KEY, $courseTitle TEXT, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup TEXT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT)");
+        "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup TEXT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
 
     await db.execute(
-        "CREATE TABLE $FavTABLE ($email TEXT PRIMARY KEY, $courseID INTEGER PRIMARY KEY, FOREIGN KEY ($email) REFERENCES $UserTABLE($email) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY ($courseID) REFERENCES $CourseTABLE($courseID) ON DELETE CASCADE ON UPDATE CASCADE");
+        "CREATE TABLE $FavTABLE ($email TEXT NOT NULL, $courseID INTEGER NOT NULL, PRIMARY KEY(\"emailAddress\", \"courseID\"),FOREIGN KEY(\"emailAddress\") REFERENCES \"User\"(\"emailAddress\"))");
 
     await db //Session
-        .execute("CREATE TABLE $SessionTABLE ($sessionID INTEGER PRIMARY KEY, "
-        "$courseID INTEGER PRIMARY KEY, $startDateOfSession TEXT, $dateTime TEXT, "
-        "$vacancy INTEGER, $classSize INTEGER, "
-        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID) ON UPDATE CASCADE ON DELETE CASCADE");
+        .execute("CREATE TABLE $SessionTABLE ($sessionID INTEGER NOT NULL, "
+        "$courseID INTEGER NOT NULL, $startDateOfSession TEXT NOT NULL, $dateTime TEXT NOT NULL, "
+        "$vacancy INTEGER NOT NULL, $classSize INTEGER NOT NULL, "
+        "PRIMARY KEY($sessionID AUTOINCREMENT),"
+        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID))");
 
     await db //Register
-        .execute("CREATE TABLE $RegisterTABLE ($email TEXT PRIMARY KEY, $sessionID INTEGER PRIMARY KEY, $courseID INTEGER PRIMARY KEY,"
-        "FOREIGN KEY($email) REFERENCES $UserTABLE($email) ON UPDATE CASCADE ON DELETE CASCADE,"
-        "FOREIGN KEY($sessionID) REFERENCES $SessionTABLE($sessionID) ON UPDATE CASCADE ON DELETE CASCADE,"
-        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID) ON UPDATE CASCADE ON DELETE CASCADE");
+        .execute("CREATE TABLE $RegisterTABLE ($email TEXT NOT NULL, $sessionID INTEGER NOT NULL, $courseID INTEGER NOT NULL,"
+        "PRIMARY KEY($email, $sessionID, $courseID),"
+        "FOREIGN KEY($email) REFERENCES $UserTABLE($email),"
+        "FOREIGN KEY($sessionID) REFERENCES $SessionTABLE($sessionID),"
+        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID))");
+
   }
+
   /// This function saves a Course object into the CourseTABLE
   Future<Course> saveCourse(Course course) async {
     var dbClient = await db;
