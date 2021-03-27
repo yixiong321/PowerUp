@@ -1,3 +1,4 @@
+
 class Vendor{
   String _emailAddress;
   String _nameOfPOC;
