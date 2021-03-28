@@ -2,9 +2,10 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:powerup/HomePage.dart';
-import 'package:powerup/LoginController.dart';
-import 'package:powerup/RegisterPage.dart';
+import 'package:powerup/pages/HomePage.dart';
+import 'package:powerup/controllers/LoginRegisterController.dart';
+import 'package:powerup/pages/RegisterPage.dart';
+import 'package:powerup/DBHelper.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   var _formKey = GlobalKey<FormState>();
+  var dbHelper = DBHelper().db;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,12 +28,10 @@ class _LoginPageState extends State<LoginPage> {
             Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/background.png'),
-                      fit: BoxFit.cover,
-                    )
-                )
-            ),
-            Builder(builder: (context){
+              image: AssetImage('assets/background.png'),
+              fit: BoxFit.cover,
+            ))),
+            Builder(builder: (context) {
               return SingleChildScrollView(
                 child: Form(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -39,54 +40,48 @@ class _LoginPageState extends State<LoginPage> {
                       padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
                       child: Column(
                         children: [
-                          Image.asset(
-                              'assets/powerup.png',
-                              scale: 2
-                          ),
+                          Image.asset('assets/powerup.png', scale: 2),
                           SizedBox(height: 20),
                           TextFormField(
-                            controller: email,
+                              controller: email,
                               obscureText: false,
                               style: style,
-                              validator: (String email){
-                                if(email.isEmpty) {
+                              validator: (String email) {
+                                if (email.isEmpty) {
                                   return 'Email cannot be empty';
                                 }
                                 return null;
                               },
                               decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                    Icons.email,
-                                    color: Colors.grey[450]
-                                ),
-                                contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                prefixIcon:
+                                    Icon(Icons.email, color: Colors.grey[450]),
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20, 15, 20, 15),
                                 hintText: "Email address",
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(32)),
-                              )
-                          ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(32)),
+                              )),
                           SizedBox(height: 10),
                           TextFormField(
-                            controller: password,
+                              controller: password,
                               obscureText: true,
                               style: style,
-                              validator: (String password){
-                                if(password.isEmpty){
+                              validator: (String password) {
+                                if (password.isEmpty) {
                                   return 'Password cannot be empty';
                                 }
                                 return null;
                               },
                               decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                    Icons.lock,
-                                    color: Colors.grey[450]
-                                ),
-                                contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                prefixIcon:
+                                    Icon(Icons.lock, color: Colors.grey[450]),
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20, 15, 20, 15),
                                 hintText: "Password",
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-                              )
-                          ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(32.0)),
+                              )),
                           SizedBox(height: 20),
-
                           Material(
                               elevation: 5.0,
                               borderRadius: BorderRadius.circular(30),
@@ -94,22 +89,23 @@ class _LoginPageState extends State<LoginPage> {
                               child: MaterialButton(
                                   minWidth: MediaQuery.of(context).size.width,
                                   padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                                  onPressed: (){
-                                    FocusScope.of(context).requestFocus(FocusNode());
-                                    if(_formKey.currentState.validate()){
-                                      if(LoginController.accountInDB(email.text, password.text)){
+                                  onPressed: () {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+
+                                    if (_formKey.currentState.validate()) {
+                                      if (/*LoginRegisterController.accountInDB(email.text, password.text)*/ true) {
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
-                                                builder: (context) => HomePage())
-                                        );
-                                      }
-                                      else{
+                                                builder: (context) =>
+                                                    HomePage()));
+                                      } else {
                                         SnackBar sb = SnackBar(
                                           content: Text(
-                                              'The email or password is invalid or the account does not exist',
-                                              style: TextStyle(
+                                            'The email or password is invalid or the account does not exist',
+                                            style: TextStyle(
                                               fontSize: 16,
-                                          ),
+                                            ),
                                           ),
                                           backgroundColor: Colors.redAccent,
                                           duration: Duration(seconds: 5),
@@ -120,44 +116,34 @@ class _LoginPageState extends State<LoginPage> {
                                       }
                                     }
                                   },
-                                  child: Text(
-                                      "Login",
+                                  child: Text("Login",
                                       textAlign: TextAlign.center,
                                       style: style.copyWith(
-                                        color: Colors.black, fontWeight: FontWeight.bold,
-                                      )
-                                  )
-                              )
-                          ),
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      )))),
                           SizedBox(height: 10),
-                          Text(
-                              "Don't have an account?",
+                          Text("Don't have an account?",
                               style: style.copyWith(
                                 color: Colors.black,
-                              )
-                          ),
+                              )),
                           FlatButton(
-                            onPressed: (){
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => RegisterPage())
-                              );
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => RegisterPage()));
                             },
-                            child: Text(
-                                "Create a new one",
+                            child: Text("Create a new one",
                                 style: TextStyle(
                                   color: Colors.white,
                                   decoration: TextDecoration.underline,
                                 )),
                           )
                         ],
-                      )
-                  ),
+                      )),
                 ),
               );
             })
           ],
-        )
-    );
+        ));
   }
 }

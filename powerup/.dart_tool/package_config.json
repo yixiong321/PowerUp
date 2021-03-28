@@ -140,6 +140,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "pedantic",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/pedantic-1.11.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "platform",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/platform-3.0.0",
       "packageUri": "lib/",
@@ -177,13 +183,13 @@
     },
     {
       "name": "sqflite",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.0+1",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.0+3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "sqflite_common",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite_common-2.0.0+1",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite_common-2.0.0+2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -237,7 +243,7 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/win32-2.0.0",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/win32-2.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -248,13 +254,19 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "yaml",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/yaml-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "powerup",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-03-23T13:23:54.995444Z",
+  "generated": "2021-03-27T08:54:16.698507Z",
   "generator": "pub",
   "generatorVersion": "2.13.0-30.0.dev"
 }
