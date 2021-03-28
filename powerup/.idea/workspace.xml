@@ -24,30 +24,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71728eb3-97ce-4d7d-b4c4-27a3b10c7994" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/controllers/VendorController.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.dart_tool/package_config_subset" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config_subset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dart_tool/version" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/version" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GeneratedPluginRegistrant.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/DBHelper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/DBHelper.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/controllers/UserController.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/controllers/UserController.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/HomePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/HomePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/LoginPage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -120,30 +116,30 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="399" y="75" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1280.680@0.0.1280.680" timestamp="1615644818065" />
-    <state x="93" y="93" width="1095" height="495" key="AVDManager" timestamp="1615095078790">
+    <state x="93" y="93" width="1095" height="495" key="AVDManager" timestamp="1616903429459">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="93" y="93" width="1095" height="495" key="AVDManager/0.0.1280.680@0.0.1280.680" timestamp="1615095078790" />
+    <state x="93" y="93" width="1095" height="495" key="AVDManager/0.0.1280.680@0.0.1280.680" timestamp="1616903429459" />
     <state x="454" y="106" key="FileChooserDialogImpl" timestamp="1616577846259">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="454" y="106" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1616577846259" />
-    <state width="1236" height="167" key="GridCell.Tab.0.bottom" timestamp="1615095697740">
+    <state width="1236" height="250" key="GridCell.Tab.0.bottom" timestamp="1616904516699">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1236" height="167" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1615095697740" />
-    <state width="1236" height="167" key="GridCell.Tab.0.center" timestamp="1615095697740">
+    <state width="1236" height="250" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1616904516699" />
+    <state width="1236" height="250" key="GridCell.Tab.0.center" timestamp="1616904516698">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1236" height="167" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1615095697740" />
-    <state width="1236" height="167" key="GridCell.Tab.0.left" timestamp="1615095697740">
+    <state width="1236" height="250" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1616904516698" />
+    <state width="1236" height="250" key="GridCell.Tab.0.left" timestamp="1616904516698">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1236" height="167" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1615095697740" />
-    <state width="1236" height="167" key="GridCell.Tab.0.right" timestamp="1615095697740">
+    <state width="1236" height="250" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1616904516698" />
+    <state width="1236" height="250" key="GridCell.Tab.0.right" timestamp="1616904516698">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1236" height="167" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1615095697740" />
+    <state width="1236" height="250" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1616904516698" />
     <state x="172" y="0" key="SettingsEditor" timestamp="1615644444744">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
@@ -156,5 +152,15 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="303" y="1" width="672" height="678" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1615648273634" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/pages/LoginPage.dart</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

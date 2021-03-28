@@ -6,6 +6,8 @@ import 'package:powerup/pages/HomePage.dart';
 import 'package:powerup/controllers/LoginRegisterController.dart';
 import 'package:powerup/pages/RegisterPage.dart';
 
+import '../DBHelper.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   /// This function displays the Login Page
@@ -17,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   var _formKey = GlobalKey<FormState>();
+  var dbHelper = DBHelper().db;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                                   onPressed: (){
                                     FocusScope.of(context).requestFocus(FocusNode());
                                     if(_formKey.currentState.validate()){
-                                      if(LoginRegisterController.accountInDB(email.text, password.text)){
+                                      if(/*LoginRegisterController.accountInDB(email.text, password.text)*/true){
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (context) => HomePage())
