@@ -1,5 +1,4 @@
 class User {
-
   String _name;
   String _DOB;
   String _emailAddress;

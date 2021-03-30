@@ -6,7 +6,8 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:powerup/DBHelper.dart';
-import 'package:powerup/entities/user.dart';
+import 'package:powerup/entities/User.dart';
+import 'package:powerup/entities/Vendor.dart';
 
 class LoginRegisterController{
 
@@ -17,17 +18,9 @@ class LoginRegisterController{
     }
     return false;
   }
+*/
 
---------------------------------------------------------------------------------
-  /// Function to check if passwords match
-  ------To move to UI------
 
-  bool passwordMatch(String passwordU, String reenterPassword) {
-
-  }
---------------------------------------------------------------------------------
-  */
-  
   /// Function to send email with verification code upon successful registration
   /// called by function in UI after checkDetails()
   Future<int> sendValidationEmail(String email) async {
@@ -72,19 +65,20 @@ class LoginRegisterController{
       final bool isValid = EmailValidator.validate(email);
       if (isValid == true) {
         /// format is okay, check database for match
-        var users = await DBHelper().getUsers();  /// Get list of User objects
+        var users = await DBHelper().getAllUsers();  /// Get list of User objects
         /// check if the id attribute matches
         for (int i = 0; i < users.length; i++) {
           if (users[i].emailAddress == email)
             return false;     /// return false if email matches in database (match --> email already in use)
         }
-        return true;      /// return true if email does not already exist in database
+        return true;          /// return true if email does not already exist in database
       }
     } catch(e) {
       print(e);
-      return false;
     }
+    return false;             /// If control flow reaches here ==> caught error
   }
+
 
 /*
   /// Function to verify code when user enters code received by email
@@ -109,6 +103,8 @@ class LoginRegisterController{
       return true;
   }
 */
+
+
   /// Function to check contactNum
   bool isValidContactNum(int contactNum) {
     String contactNumStr = contactNum.toString();
@@ -122,6 +118,7 @@ class LoginRegisterController{
       return true;
     }
   }
+
 
   /// Function to hash password
   String generateHash(String passwordU) {
@@ -138,30 +135,48 @@ class LoginRegisterController{
     }
     /// print("Digest as bytes: ${digest1.bytes}");
     /// print("Digest as hex string: $digest1");
+    return "Hashing Failed.";             /// If control flow reaches here ==> caught error
   }
 
-  /// Function to process login for users with accounts in database
-  /// return true if passwords match
-  /// return false if username or password not found.
+
+  /// Function to process login for users/vendors with accounts in database
+  /// return true if user/vendor found AND passwords match
+  /// return false if username not found OR username found but password does not match.
   Future<bool> login(String username, String password) async {
     /// Perform hashing for comparison with stored password later
-    String hashedPassword = generateHash(password);
+    String hashedPassword = generateHash(password); //password;
     try {
-      var accounts = await DBHelper().getUsernamePassword();
-      for (int i = 0; i < accounts.length; i++) {
-          if (accounts[i].emailAddress == username){
-            if (accounts[i].passwordU == hashedPassword)
-              return true;
-            else
-              return false;     /// password does not match
-          }
+      var userAccounts = await DBHelper().getAllUsers();
+      var vendorAccounts = await DBHelper().getAllVendors();
+
+      /// Check for users
+      for (int i = 0; i < userAccounts.length; i++) {
+        if (userAccounts[i].emailAddress == username){
+          if (userAccounts[i].passwordU == hashedPassword)
+            return true;
           else
-            return false;       /// username does not match/does not exist
+            return false;     /// User found but passwordU does not match
         }
+      }
+
+      /// Check for vendors
+      for (int i = 0; i < vendorAccounts.length; i++) {
+        if (vendorAccounts[i].emailAddress == username){
+          if (vendorAccounts[i].passwordV == hashedPassword)
+            return true;
+          else
+            return false;     /// Vendor found but passwordV does not match
+        }
+      }
     } catch (e) {
       print(e);
     }
+    /// If control flow reaches here ==> either:
+    /// account does not exist (through try block)
+    /// caught error (through catch block)
+    return false;
   }
+
 
   /// Function to collect and check validity and formatting of details
   Future<String> checkDetails(String email, int contactNum, int nokContactNum) async {
@@ -184,9 +199,10 @@ class LoginRegisterController{
     } catch (e) {
       print("Caught error at contact number validation.");
       print(e);
-      return "-1";
     }
+    return "-1";
   }
+
 
   Future<String> createUser(String name, String dob, String email, int contactNum, String passwordU, String nokName, int nokContactNum) async {
     String hashedPassword = "";
@@ -203,7 +219,7 @@ class LoginRegisterController{
     /// Format data in User object to pass to DB class so that DBHelper can write to DB under one single user
     try {
       User user = new User(name, dob, email, contactNum, hashedPassword, nokName, nokContactNum);
-      User saveResult = await DBHelper().save(user);
+      User saveResult = await DBHelper().saveUser(user);
     } catch (e) {
       print(e);
       return "-1";
@@ -215,6 +231,34 @@ class LoginRegisterController{
       return "Success!";
   }
 
+
+Future<String> createVendor(String emailAddress, String nameOfPOC, int contactNumOfPOC, String passwordV, String busRegNum, String companyName) async {
+    String hashedPassword = "";
+    /// Hash password for storage
+    try {
+      hashedPassword = generateHash(passwordV);
+    } catch (e) {
+      print("Caught error at password hashing.");
+      print(e);
+      return "-1";
+    }
+    Vendor vendor = new Vendor(emailAddress, nameOfPOC, contactNumOfPOC, hashedPassword, busRegNum, companyName);
+    Vendor saveResult;
+    /// Format data in User object to pass to DB class so that DBHelper can write to DB under one single user
+    try {
+      Vendor vendor = new Vendor(emailAddress, nameOfPOC, contactNumOfPOC, hashedPassword, busRegNum, companyName);
+      Vendor saveResult = await DBHelper().saveVendor(vendor);
+    } catch (e) {
+      print(e);
+      return "-1";
+    }
+
+    if (!(vendor == saveResult))
+      return "Registration Unsuccessful";
+    else
+      return "Success!";
+  }
+
 /*In UI, run following functions: checkDetails, sendValidationEmail (returns codeGenerated) -
-  which can be compared to code user enters in text field, and createUser (returns String)*/
+  which can be compared to code user enters in text field, and createUser/createVendor (returns String)*/
 }

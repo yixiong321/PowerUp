@@ -9,6 +9,7 @@ import 'package:powerup/entities/Course.dart';
 
 class HomePage extends StatefulWidget {
   @override
+  /// This function displays the Home Page
   _HomePageState createState() => _HomePageState();
 }
 
@@ -18,9 +19,9 @@ class _HomePageState extends State<HomePage> {
   List<bool> selectedOrderBy;
   List<String> orderByCategories;
   static List<Course> courseList = [
-    Course('a', 'b', 4, 'assets/leatherworkshop.jpg'),
-    Course('c', 'd', 3, 'assets/leatherworkshop.jpg'),
-    Course('d', 'e', 3.5, 'assets/leatherworkshop.jpg'),
+    Course.forMain('a', 'b', 4, 'assets/leatherworkshop.jpg'),
+    Course.forMain('c', 'd', 3, 'assets/leatherworkshop.jpg'),
+    Course.forMain('d', 'e', 3.5, 'assets/leatherworkshop.jpg'),
   ];
   @override
   void initState(){
@@ -83,6 +84,7 @@ class _HomePageState extends State<HomePage> {
       )
     );
   }
+
   Widget filterWindow() {
     return SingleChildScrollView(
       child: Column(
