@@ -101,29 +101,32 @@ class _LoginPageState extends State<LoginPage> {
                                   onPressed: (){
                                     FocusScope.of(context).requestFocus(FocusNode());
                                     if(_formKey.currentState.validate()){
-                                      if(/*LoginRegisterController.accountInDB(email.text, password.text)*/true){
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) => HomePage())
-                                        );
-                                      }
-                                      else{
-                                        SnackBar sb = SnackBar(
-                                          content: Text(
-                                              'The email or password is invalid or the account does not exist',
-                                              style: TextStyle(
-                                              fontSize: 16,
-                                          ),
-                                          ),
-                                          backgroundColor: Colors.redAccent,
-                                          duration: Duration(seconds: 5),
-                                        );
-                                        Scaffold.of(context)
-                                          ..hideCurrentSnackBar()
-                                          ..showSnackBar(sb);
-                                      }
-                                    }
-                                  },
+                                      LoginRegisterController().login(email.text, password.text).then((loginCheck){
+                                        if(loginCheck){
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) => HomePage())
+                                          );
+                                        }
+                                        else{
+                                          SnackBar sb = SnackBar(
+                                            content: Text(
+                                                'The email or password is invalid or the account does not exist',
+                                                style: TextStyle(
+                                                fontSize: 16,
+                                            ),
+                                            ),
+                                            backgroundColor: Colors.redAccent,
+                                            duration: Duration(seconds: 5),
+                                          );
+                                          Scaffold.of(context)
+                                            ..hideCurrentSnackBar()
+                                            ..showSnackBar(sb);
+                                        } /// else
+                                      } /// inside then
+                                      ); /// then
+                                    } /// if (_formkey)
+                                  }, /// on pressed
                                   child: Text(
                                       "Login",
                                       textAlign: TextAlign.center,
