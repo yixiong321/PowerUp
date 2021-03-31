@@ -5,6 +5,8 @@ import 'package:powerup/main.dart';
 import 'package:powerup/pages/HomePage.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:email_auth/email_auth.dart';
+import 'package:powerup/pages/VerificationPage.dart';
 
 
 class RegisterPage extends StatefulWidget {
@@ -14,6 +16,10 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  
+  ///the boolean to handle the dynamic operations
+  bool submitValid = false;
+  
   @override
   Widget build(BuildContext context) {
     TextEditingController lastName = TextEditingController();
@@ -32,6 +38,20 @@ class _RegisterPageState extends State<RegisterPage> {
     TextEditingController companyEmail = TextEditingController();
     TextEditingController companyPassword = TextEditingController();
     TextEditingController companyConfirmPassword = TextEditingController();
+    ///testediting controllers to get the value from text fields
+    final TextEditingController _otpcontroller = TextEditingController();
+    
+    ///a void funtion to send the OTP to the user
+    void sendOtp() async {
+      EmailAuth.sessionName = "powerup";
+      bool result =
+      await EmailAuth.sendOtp(receiverMail: email.value.text);
+      if (result) {
+        setState(() {
+          submitValid = true;
+        });
+      }
+    }
 
     DateTime dobDT;
     int yearOfUser;
@@ -211,7 +231,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   //if email not in db
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
-                                          builder: (context) => HomePage())
+                                          builder: (context) => VerificationPage(email: email, otpcontroller : _otpcontroller, ))
                                   );
                               }
                           }),
@@ -322,7 +342,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   //if email not in db
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
-                                          builder: (context) => HomePage())
+                                          builder: (context) => VerificationPage(email: companyEmail, otpcontroller : _otpcontroller, ))
                                   );
                                 }
                                 return;
