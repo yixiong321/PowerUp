@@ -6,6 +6,7 @@ import 'package:powerup/pages/CoursePage.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:powerup/entities/Course.dart';
+import 'package:powerup/pages/UserProfile.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,9 +20,15 @@ class _HomePageState extends State<HomePage> {
   List<bool> selectedOrderBy;
   List<String> orderByCategories;
   static List<Course> courseList = [
-    Course.forMain('a', 'b', 4, 'assets/leatherworkshop.jpg'),
-    Course.forMain('c', 'd', 3, 'assets/leatherworkshop.jpg'),
-    Course.forMain('d', 'e', 3.5, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 4, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3.5, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 4, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3.5, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 4, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3.5, 'assets/leatherworkshop.jpg'),
   ];
   @override
   void initState(){
@@ -30,57 +37,63 @@ class _HomePageState extends State<HomePage> {
     orderByCategories = ['PriceUp', 'PriceDown', 'Popularity', 'Ratings'];
   }
 
-  Widget courseTemplate(String name, String companyName, double rating, String image){
+  Widget courseTemplate(String name, String companyName, double rating, String url){
     return GestureDetector(
       onTap:(){
         Navigator.push(context, MaterialPageRoute(
-            builder: (context) => CoursePage()));
+            builder: (context) => CoursePage(
+              //pass in all the parameters required for CoursePage - LI SHENG
+                false, name
+            )));
       },
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        color: Colors.grey[300],
-        child: Row(
-          children:[
-            Ink(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                color: Colors.blueGrey,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage(image),
-                )
-              ),
-            ),
-            Flexible(
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(name, overflow: TextOverflow.ellipsis ,style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 7),
-                    Text(companyName),
-                    SizedBox(height: 5),
-                    RatingBarIndicator(
-                      rating: rating,
-                      itemBuilder: (_, __){
-                        return Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        );
-                      },
-                      itemSize: 20,
-                    )
-                  ],
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          color: Colors.grey[300],
+          child: Row(
+            children:[
+              Ink(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(url),
+                  )
                 ),
               ),
-            )
-          ]
-        )
+              Flexible(
+                child: Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(name, overflow: TextOverflow.ellipsis ,style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 7),
+                      Text(companyName),
+                      SizedBox(height: 5),
+                      RatingBarIndicator(
+                        rating: rating,
+                        itemBuilder: (_, __){
+                          return Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          );
+                        },
+                        itemSize: 20,
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ]
+          )
+        ),
       )
     );
   }
@@ -234,7 +247,10 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.account_circle),
-            onPressed: (){},
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => UserProfile()));
+            },
             color: Colors.black,
             iconSize: 30,
           ),
@@ -345,13 +361,14 @@ class _HomePageState extends State<HomePage> {
                     ]
                   ) :
                   Text(''),
-                  SizedBox(height: 10),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: courseList.length,
-                      itemBuilder: (context, index){
-                        return courseTemplate(courseList[index].courseTitle, courseList[index].company, courseList[index].rating, courseList[index].url);
-                      }
+                    child: Scrollbar(
+                      child: ListView.builder(
+                        itemCount: courseList.length,
+                        itemBuilder: (context, index){
+                          return courseTemplate(courseList[index].courseTitle, courseList[index].company, courseList[index].rating, courseList[index].url);
+                        }
+                      ),
                     ),
                   )
                 ]),
