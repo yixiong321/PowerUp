@@ -20,6 +20,15 @@ class LoginRegisterController{
   }
 */
 
+  Future<User> getUserObj(String emailAddress) async {
+    var users = await DBHelper().getAllUsers();  /// Get list of User objects
+        /// check if the id attribute matches
+        for (int i = 0; i < users.length; i++) {
+          if (users[i].emailAddress == emailAddress)
+            return users[i];     /// return false if email matches in database (match --> email already in use)
+        }
+        return null;          /// return true if email does not already exist in database
+  }
 
   /// Function to send email with verification code upon successful registration
   /// called by function in UI after checkDetails()
@@ -104,6 +113,18 @@ class LoginRegisterController{
   }
 */
 
+/*
+Vignesh123! : true
+vignesh123 : false
+VIGNESH123! : false
+12345678? : false
+*/
+bool isValidPassword(String value){
+        String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
+        RegExp regExp = new RegExp(pattern);
+        return regExp.hasMatch(value);
+  }
+
 
   /// Function to check contactNum
   bool isValidContactNum(int contactNum) {
@@ -178,6 +199,7 @@ class LoginRegisterController{
   }
 
 
+/*
   /// Function to collect and check validity and formatting of details
   Future<String> checkDetails(String email, int contactNum, int nokContactNum) async {
     /// Check email
@@ -202,9 +224,10 @@ class LoginRegisterController{
     }
     return "-1";
   }
+*/
 
 
-  Future<String> createUser(String name, String dob, String email, int contactNum, String passwordU, String nokName, int nokContactNum) async {
+  Future<User> createUser(String name, String dob, String email, int contactNum, String passwordU, String nokName, int nokContactNum) async {
     String hashedPassword = "";
     /// Hash password for storage
     try {
@@ -212,7 +235,7 @@ class LoginRegisterController{
     } catch (e) {
       print("Caught error at password hashing.");
       print(e);
-      return "-1";
+      return null;
     }
     User user = new User(name, dob, email, contactNum, hashedPassword, nokName, nokContactNum);
     User saveResult;
@@ -222,17 +245,17 @@ class LoginRegisterController{
       User saveResult = await DBHelper().saveUser(user);
     } catch (e) {
       print(e);
-      return "-1";
+      return null;
     }
 
     if (!(user == saveResult))
-      return "Registration Unsuccessful";
+      return null;
     else
-      return "Success!";
+      return user;
   }
 
 
-Future<String> createVendor(String emailAddress, String nameOfPOC, int contactNumOfPOC, String passwordV, String busRegNum, String companyName) async {
+Future<Vendor> createVendor(String emailAddress, String nameOfPOC, int contactNumOfPOC, String passwordV, String busRegNum, String companyName) async {
     String hashedPassword = "";
     /// Hash password for storage
     try {
@@ -240,7 +263,7 @@ Future<String> createVendor(String emailAddress, String nameOfPOC, int contactNu
     } catch (e) {
       print("Caught error at password hashing.");
       print(e);
-      return "-1";
+      return null;
     }
     Vendor vendor = new Vendor(emailAddress, nameOfPOC, contactNumOfPOC, hashedPassword, busRegNum, companyName);
     Vendor saveResult;
@@ -250,13 +273,13 @@ Future<String> createVendor(String emailAddress, String nameOfPOC, int contactNu
       Vendor saveResult = await DBHelper().saveVendor(vendor);
     } catch (e) {
       print(e);
-      return "-1";
+      return null;
     }
 
     if (!(vendor == saveResult))
-      return "Registration Unsuccessful";
+      return null;
     else
-      return "Success!";
+      return vendor;
   }
 
 /*In UI, run following functions: checkDetails, sendValidationEmail (returns codeGenerated) -
