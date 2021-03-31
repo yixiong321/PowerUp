@@ -104,6 +104,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "email_auth",
+      "rootUri": "file:///C:/Users/anasm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/email_auth-0.0.1+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "email_validator",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/email_validator-1.0.6",
       "packageUri": "lib/",
@@ -166,6 +172,18 @@
     {
       "name": "http_parser",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///C:/Users/anasm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http-0.13.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "http_parser",
+      "rootUri": "file:///C:/Users/anasm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http_parser-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -404,6 +422,7 @@
       "languageVersion": "2.7"
     }
   ],
+
   "generated": "2021-03-31T10:05:02.303085Z",
   "generator": "pub",
   "generatorVersion": "2.13.0-30.0.dev"
