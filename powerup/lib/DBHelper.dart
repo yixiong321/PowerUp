@@ -131,7 +131,7 @@ class DBHelper {
     await db.execute("CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY, $POCName TEXT, $POCNum INTEGER, $passV TEXT, $busRegNum TEXT, $compName TEXT)");
 
     await db.execute(
-        "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup TEXT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
+        "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup INT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
 
     await db.execute(
         "CREATE TABLE $FavTABLE ($email TEXT NOT NULL, $courseID INTEGER NOT NULL, PRIMARY KEY(\"emailAddress\", \"courseID\"),FOREIGN KEY(\"emailAddress\") REFERENCES \"User\"(\"emailAddress\") ON DELETE CASCADE)");
