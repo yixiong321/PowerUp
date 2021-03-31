@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:powerup/entities/User.dart';
 import 'package:powerup/pages/CoursePage.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,8 @@ import 'package:powerup/pages/UserProfile.dart';
 class HomePage extends StatefulWidget {
   @override
   /// This function displays the Home Page
+  User user;
+  HomePage(this.user);
   _HomePageState createState() => _HomePageState();
 }
 

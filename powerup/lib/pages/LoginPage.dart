@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:powerup/pages/HomePage.dart';
 import 'package:powerup/controllers/LoginRegisterController.dart';
 import 'package:powerup/pages/RegisterPage.dart';
+import 'package:powerup/entities/User.dart';
 
 import '../DBHelper.dart';
 
@@ -20,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController password = TextEditingController();
   var _formKey = GlobalKey<FormState>();
   var dbHelper = DBHelper().db;
+  User user;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,10 +105,15 @@ class _LoginPageState extends State<LoginPage> {
                                     if(_formKey.currentState.validate()){
                                       LoginRegisterController().login(email.text, password.text).then((loginCheck){
                                         if(loginCheck){
-                                          Navigator.of(context).push(
+                                          LoginRegisterController().getUserObj(email.text).then((user){
+                                            Navigator.of(context).push(
                                               MaterialPageRoute(
-                                                  builder: (context) => HomePage())
-                                          );
+                                                  builder: (context) => HomePage(
+                                                    user
+                                                  ))
+                                            );
+                                          });
+                                          
                                         }
                                         else{
                                           SnackBar sb = SnackBar(
