@@ -134,21 +134,25 @@ class DBHelper {
         "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup TEXT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
 
     await db.execute(
-        "CREATE TABLE $FavTABLE ($email TEXT NOT NULL, $courseID INTEGER NOT NULL, PRIMARY KEY(\"emailAddress\", \"courseID\"),FOREIGN KEY(\"emailAddress\") REFERENCES \"User\"(\"emailAddress\"))");
+        "CREATE TABLE $FavTABLE ($email TEXT NOT NULL, $courseID INTEGER NOT NULL, PRIMARY KEY(\"emailAddress\", \"courseID\"),FOREIGN KEY(\"emailAddress\") REFERENCES \"User\"(\"emailAddress\") ON DELETE CASCADE)");
 
     await db //Session
         .execute("CREATE TABLE $SessionTABLE ($sessionID INTEGER NOT NULL, "
         "$courseID INTEGER NOT NULL, $startDateOfSession TEXT NOT NULL, $dateTime TEXT NOT NULL, "
         "$vacancy INTEGER NOT NULL, $classSize INTEGER NOT NULL, "
         "PRIMARY KEY($sessionID AUTOINCREMENT),"
-        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID))");
+        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID)"
+        "ON DELETE CASCADE)");
 
     await db //Register
         .execute("CREATE TABLE $RegisterTABLE ($email TEXT NOT NULL, $sessionID INTEGER NOT NULL, $courseID INTEGER NOT NULL,"
         "PRIMARY KEY($email, $sessionID, $courseID),"
-        "FOREIGN KEY($email) REFERENCES $UserTABLE($email),"
-        "FOREIGN KEY($sessionID) REFERENCES $SessionTABLE($sessionID),"
-        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID))");
+        "FOREIGN KEY($email) REFERENCES $UserTABLE($email)"
+        "ON DELETE CASCADE,"
+        "FOREIGN KEY($sessionID) REFERENCES $SessionTABLE($sessionID)"
+        "ON DELETE CASCADE,"
+        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID)"
+        "ON DELETE CASCADE)");
 
   }
 
