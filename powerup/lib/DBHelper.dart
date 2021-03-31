@@ -479,4 +479,8 @@ class DBHelper {
   /// This function deletes a User from a Session from the SessionTABLE
   /*Future<bool>deleteUserFromSession(String userEmail, int sessionID){
   }*/
+
+
+
+
 }
