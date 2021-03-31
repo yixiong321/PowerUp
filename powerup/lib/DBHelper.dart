@@ -327,6 +327,18 @@ class DBHelper {
     return courseList;
   }
 
+  Future<List<Course>> getVendorCourse(Vendor vendor) async{
+    var dbClient = await db;
+    List<Map> maps = await dbClient.rawQuery(
+        "SELECT * FROM Course  WHERE contactNumOfPOC = ?", [vendor.contactNumOfPOC]);
+    List<Course> courses = []; //to store entries into a list of <objects>
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        courses.add(Course.fromMap(maps[i]));
+      }}
+      return courses;
+  }
+
   /// This function deletes a Course object given a courseID from the CourseTABLE
   Future<bool> deleteCourse(int courseID) async {
     var dbClient = await db;
@@ -465,6 +477,10 @@ class DBHelper {
   }
 
   /// This function deletes a User from a Session from the SessionTABLE
-  Future<bool>deleteUserFromSession(String userEmail, int sessionID){
-  }
+  /*Future<bool>deleteUserFromSession(String userEmail, int sessionID){
+  }*/
+
+
+
+
 }

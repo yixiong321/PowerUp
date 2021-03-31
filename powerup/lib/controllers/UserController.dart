@@ -3,6 +3,7 @@ import 'package:powerup/entities/User.dart';
 import 'package:powerup/entities/Course.dart';
 import 'dart:async';
 import 'package:powerup/DBHelper.dart';
+import 'package:powerup/entities/Session.dart';
 
 
 /// This controller handles sending validation email and changing of password for user.
@@ -15,7 +16,7 @@ class UserController {
 
 
   /// Default constructor for UserController
-  UserController(){}
+  UserController() {}
   DBHelper dbHelper = new DBHelper();
 
   /*
@@ -33,7 +34,8 @@ class UserController {
   }
 
   /// This function registers the course to this controllers user's object
-  Future<bool> addCourseToList(int courseID, int sessionID, String emailAddress) async {
+  Future<bool> addCourseToList(int courseID, int sessionID,
+      String emailAddress) async {
     return dbHelper.saveRegister(courseID, sessionID, emailAddress);
   }
 
@@ -44,11 +46,13 @@ class UserController {
 
   /// This function checks if the course is registered in this controllers
   /// user's object
-  Future<bool> containsRegisteredCourse(int courseID, String emailAddress) async{
+  Future<bool> containsRegisteredCourse(int courseID,
+      String emailAddress) async {
     var dbClient = await dbHelper.db;
     List<Map> maps = await dbClient.rawQuery(
-        "SELECT * from RegisterTABLE WHERE courseID = ? AND email = ?", [courseID, emailAddress]);
-    if(maps.isEmpty){
+        "SELECT * from RegisterTABLE WHERE courseID = ? AND email = ?",
+        [courseID, emailAddress]);
+    if (maps.isEmpty) {
       return false;
     }
     return true;
@@ -56,19 +60,21 @@ class UserController {
 
   /// This function retrieves the user's favorite courses and stores it in
   /// this controllers user's object
-  Future<List<Course>> getUserFavoriteCourses(String emailAddress) async{
+  Future<List<Course>> getUserFavoriteCourses(String emailAddress) async {
     return dbHelper.getFavForUser(emailAddress);
   }
 
   /// This function adds the course to the user's favorite courses and stores
   /// it in this controllers user's object
-  Future<bool> addFavoriteCourseToList(String emailAddress, int courseID) async{
+  Future<bool> addFavoriteCourseToList(String emailAddress,
+      int courseID) async {
     return dbHelper.saveFavourite(emailAddress, courseID);
   }
 
   /// This function removes the course from favorite courses and this controllers
   /// user's object
-  Future<bool> removeFavoriteCourseFromList(String emailAddress, int courseID) async {
+  Future<bool> removeFavoriteCourseFromList(String emailAddress,
+      int courseID) async {
     return dbHelper.deleteFavCourseByUser(emailAddress, courseID);
   }
 
@@ -77,12 +83,25 @@ class UserController {
   Future<bool> containsFavoriteCourse(String emailAddress, int courseID) async {
     var dbClient = await dbHelper.db;
     List<Map> maps = await dbClient.rawQuery(
-        "SELECT * from FavTABLE WHERE email = ? AND courseID = ?", [emailAddress, courseID]);
-    if(maps.isEmpty){
+        "SELECT * from FavTABLE WHERE email = ? AND courseID = ?",
+        [emailAddress, courseID]);
+    if (maps.isEmpty) {
       return false;
     }
     return true;
   }
+
+  Future<List<Session>> getAvailSessionByCourse(int courseID) async {
+    List<Session> SessionList = await dbHelper.getSessionsByCourse(courseID);
+    List<Session> vacancyList;
+    for (int i = 0; i < SessionList.length; i++) {
+      if (SessionList[i].vacancy > 0) {
+        vacancyList.add(SessionList[i]);
+      }
+    }
+    return vacancyList;
+  }
+
 }
 
 

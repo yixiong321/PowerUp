@@ -33,7 +33,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
   final TextEditingController _otpcontroller = TextEditingController();
 
 
-
+  /// Edit timer here 5 to 1800 for 30 min
   AnimationController _controller;
   int levelClock = 5;
   int _counter;
