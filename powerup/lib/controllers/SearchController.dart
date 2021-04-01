@@ -118,4 +118,14 @@ List<Course> search(String search_term, List<Course> listofCourses){
     }
     return listofCourses;
   }
+
+  /// Selects top 5 courses according to ratings to display on the default Home Page
+  List<Course> top5Courses(){
+    List<Course> topcourses;
+    List<Course> allcourses = db_helper.getAllCourses().then((List<Course> courses);
+    topcourses = orderBy(3, allcourses);
+    topcourses = topcourses[:5];
+    return topcourses;
+  }
+
 }
