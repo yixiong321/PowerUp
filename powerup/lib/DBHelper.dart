@@ -131,7 +131,7 @@ class DBHelper {
     await db.execute("CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY, $POCName TEXT, $POCNum INTEGER, $passV TEXT, $busRegNum TEXT, $compName TEXT)");
 
     await db.execute(
-        "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup INT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
+        "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup TEXT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
 
     await db.execute(
         "CREATE TABLE $FavTABLE ($email TEXT NOT NULL, $courseID INTEGER NOT NULL, PRIMARY KEY(\"emailAddress\", \"courseID\"),FOREIGN KEY(\"emailAddress\") REFERENCES \"User\"(\"emailAddress\") ON DELETE CASCADE)");
@@ -327,18 +327,6 @@ class DBHelper {
     return courseList;
   }
 
-  Future<List<Course>> getVendorCourse(Vendor vendor) async{
-    var dbClient = await db;
-    List<Map> maps = await dbClient.rawQuery(
-        "SELECT * FROM Course  WHERE contactNumOfPOC = ?", [vendor.contactNumOfPOC]);
-    List<Course> courses = []; //to store entries into a list of <objects>
-    if (maps.length > 0) {
-      for (int i = 0; i < maps.length; i++) {
-        courses.add(Course.fromMap(maps[i]));
-      }}
-      return courses;
-  }
-
   /// This function deletes a Course object given a courseID from the CourseTABLE
   Future<bool> deleteCourse(int courseID) async {
     var dbClient = await db;
@@ -477,10 +465,6 @@ class DBHelper {
   }
 
   /// This function deletes a User from a Session from the SessionTABLE
-  /*Future<bool>deleteUserFromSession(String userEmail, int sessionID){
-  }*/
-
-
-
-
+  Future<bool>deleteUserFromSession(String userEmail, int sessionID){
+  }
 }

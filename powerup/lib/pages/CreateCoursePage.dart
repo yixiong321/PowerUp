@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class CreateCoursePage extends StatefulWidget {
   @override
   /// This function displays the page to create a new course

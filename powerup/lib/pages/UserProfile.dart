@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class UserProfile extends StatefulWidget {
   @override
   /// This function displays the User Profile Page
