@@ -13,6 +13,7 @@ import 'package:powerup/entities/Session.dart';
 class DBHelper {
   //DATABASE
   static Database _db;
+  
   static const String DB_NAME = 'MainDB.db';
 
   //User Table
@@ -114,7 +115,7 @@ class DBHelper {
       print("Opening existing database");
     }
     // open the database
-    var db = await openDatabase(path, readOnly: true);
+    var db = await openDatabase(path, readOnly: false);
     return db;
 
 
@@ -131,7 +132,7 @@ class DBHelper {
     await db.execute("CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY, $POCName TEXT, $POCNum INTEGER, $passV TEXT, $busRegNum TEXT, $compName TEXT)");
 
     await db.execute(
-        "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup INT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
+        "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup INTEGER, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
 
     await db.execute(
         "CREATE TABLE $FavTABLE ($email TEXT NOT NULL, $courseID INTEGER NOT NULL, PRIMARY KEY(\"emailAddress\", \"courseID\"),FOREIGN KEY(\"emailAddress\") REFERENCES \"User\"(\"emailAddress\") ON DELETE CASCADE)");
@@ -165,6 +166,7 @@ class DBHelper {
 
   /// This function saves a User object into the UserTABLE
   Future<User> saveUser(User user) async {
+    print("DBHelper receives: ${user.name} ${user.DOB} ${user.contactNum} ${user.passwordU} ${user.NOKname}, ${user.NOKcontactNum}");
     var dbClient = await db;
     await dbClient.insert(UserTABLE, user.toMap());
     return user;

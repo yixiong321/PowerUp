@@ -142,6 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Container(
                             child: TextFormField(
                               keyboardType: TextInputType.number,
+                              maxLength: 8,
                               controller: contactNumber,
                               validator: (string){
                                 if(string.isEmpty){
@@ -238,14 +239,17 @@ class _RegisterPageState extends State<RegisterPage> {
                         Text('Contact number of next-of-kin'),
                         Container(
                             child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              maxLength: 8,
                               controller: nokContact,
                               validator: (string){
                                 if(yearNow - yearOfUser <= 12){
-                                  return 'Compulsory field cannot be empty';
+                                  if(nokContact.text == "")
+                                    return 'Compulsory field cannot be empty';
+                                  if(!registerControl.isValidContactNum(int.parse(nokContact.text))) 
+                                    return "NOK contact number is invalid. Please try again.";
                                 }
-                                if(!registerControl.isValidContactNum(int.parse(nokContact.text))) {
-                                  return "NOK contact number is invalid. Please try again.";
-                                }
+                                
                                 return null;
                               },
                               decoration: InputDecoration(
@@ -272,15 +276,26 @@ class _RegisterPageState extends State<RegisterPage> {
                               )
                             ),
                               onPressed:(){
+                              sendOtp();
                               if(_formKey1.currentState.validate()){
                                   //if email not in db
                                   String name = firstName.text + " " + lastName.text;
-                                  Navigator.of(context).push(
+                                  if((yearNow - yearOfUser <= 12) || ((yearNow - yearOfUser > 12) && (nokContact.text != "") && (nokName.text != ""))){
+                                    Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (context) => VerificationPage.fromUser(
-                                            name, dob.text, email.text, int.parse(contactNumber.text), password.text, nokName.text, int.parse(nokContact.text)
+                                            _otpcontroller, name, dob.text, email.text, int.parse(contactNumber.text), password.text, nokName.text, int.parse(nokContact.text)
                                           ))
-                                  );
+                                    );
+                                  }
+                                  if (yearNow - yearOfUser > 12) {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => VerificationPage.fromUser(
+                                              _otpcontroller, name, dob.text, email.text, int.parse(contactNumber.text), password.text, nokName.text, int.parse("-1")
+                                            ))
+                                    );
+                                  }
                               }
                           }),
                         )
@@ -419,12 +434,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                   )
                               ),
                               onPressed:(){
+                                sendOtp();
                                 if(_formKey2.currentState.validate()){
                                   //if email not in db
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (context) => VerificationPage.fromVendor(
-                                            nameOfPOC.text, brn.text, companyName.text, int.parse(companyNumber.text), companyEmail.text, companyPassword.text
+                                            _otpcontroller, nameOfPOC.text, brn.text, companyName.text, int.parse(companyNumber.text), companyEmail.text, companyPassword.text
                                           ))
                                   );
                                 }
