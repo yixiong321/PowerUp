@@ -32,7 +32,7 @@ class VerificationPage extends StatefulWidget {
   LoginRegisterController lr_controller = new LoginRegisterController();
 
   // receive data from the FirstScreen as a parameter
-  VerificationPage({Key key, @required this.email, @required this.otpcontroller}) : super(key: key);
+  VerificationPage({this.email, this.otpcontroller});
   VerificationPage.fromUser(this.name, this.dob, this.userEmail, this.contactNumber, this.password, this.nokName, this.nokContact);
   VerificationPage.fromVendor(this.nameOfPoc, this.brn, this.companyName, this.companyNumber, this.companyEmail, this.companyPassword);
 
@@ -49,7 +49,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
   bool countdownEnd = false;
 
   ///testediting controllers to get the value from text fields
-  final TextEditingController _otpcontroller = TextEditingController();
+  TextEditingController _otpcontroller = TextEditingController();
 
 
   /// Edit timer here 5 to 1800 for 30 min
