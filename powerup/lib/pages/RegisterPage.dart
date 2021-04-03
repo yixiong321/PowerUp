@@ -1,18 +1,29 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:powerup/controllers/LoginRegisterController.dart';
+import 'package:powerup/entities/Vendor.dart';
 import 'package:powerup/main.dart';
-import 'package:powerup/HomePage.dart';
+import 'package:powerup/pages/HomePage.dart';
 import 'package:intl/intl.dart';
+import 'package:powerup/pages/VendorProfile.dart';
+import 'package:powerup/pages/VerificationPage.dart';
 import 'package:provider/provider.dart';
+import 'package:email_auth/email_auth.dart';
+import 'package:powerup/pages/VerificationPage.dart';
 
 
 class RegisterPage extends StatefulWidget {
   @override
+  /// This function displays the Registration Page
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  
+  ///the boolean to handle the dynamic operations
+  bool submitValid = false;
+  
   @override
   Widget build(BuildContext context) {
     TextEditingController lastName = TextEditingController();
@@ -31,8 +42,29 @@ class _RegisterPageState extends State<RegisterPage> {
     TextEditingController companyEmail = TextEditingController();
     TextEditingController companyPassword = TextEditingController();
     TextEditingController companyConfirmPassword = TextEditingController();
-    var _formKey1 = GlobalKey<FormState>();
-    var _formKey2 = GlobalKey<FormState>();
+    ///testediting controllers to get the value from text fields
+    final TextEditingController _otpcontroller = TextEditingController();
+    
+    ///a void funtion to send the OTP to the user
+    void sendOtp() async {
+      EmailAuth.sessionName = "powerup";
+      bool result =
+      await EmailAuth.sendOtp(receiverMail: email.value.text);
+      if (result) {
+        setState(() {
+          submitValid = true;
+        });
+      }
+    }
+
+    DateTime dobDT;
+    int yearOfUser;
+    bool dobFormat;
+    int yearNow = int.parse(DateFormat('yyyy').format(DateTime.now()));
+    final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
+    final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
+    LoginRegisterController registerControl = LoginRegisterController();
+    Vendor vendor;
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -65,7 +97,6 @@ class _RegisterPageState extends State<RegisterPage> {
           body: TabBarView(
             children: [
               Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey1,
                 child: Padding(
                   padding: EdgeInsets.all(30),
@@ -84,16 +115,22 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               controller: dob,
                               validator: (string){
+                                dobFormat = false;
                                 if(string.isEmpty){
                                   return 'Compulsory field cannot be empty';
                                 }
                                 try{
-                                  DateFormat('yyyy/MM/dd').format(DateTime.parse(string));
+                                  dobDT = DateFormat('dd/MM/yyyy').parseStrict(string);
+                                  yearOfUser = int.parse(DateFormat('yyyy').format(dobDT));
+                                  if(yearOfUser >= 1900 && yearOfUser < yearNow){
+                                    dobFormat = true;
+                                    return null;
+                                  }
+                                  return 'Wrong date format';
                                 } catch(e){
-
+                                  return 'Wrong date format';
                                 }
-                                return null;
-                              },
+                                },
                               decoration: InputDecoration(
                                   hintText: "DD/MM/YYYY",
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
@@ -105,16 +142,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         Container(
                             child: TextFormField(
                               keyboardType: TextInputType.number,
-                              maxLength: 8,
                               controller: contactNumber,
                               validator: (string){
-                                if(string.isEmpty) {
+                                if(string.isEmpty){
                                   return 'Compulsory field cannot be empty';
                                 }
-                                try{
-                                  int.parse(string);
-                                } catch(e){
-                                  return 'Enter a valid number';
+                                if(!registerControl.isValidContactNum(int.parse(contactNumber.text))) {
+                                  return "Contact number is invalid. Please try again.";
                                 }
                                 return null;
                               },
@@ -125,11 +159,45 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         SizedBox(height: 10),
                         Text('*Email address'),
-                        fieldBox(email, null, false),
+                        Container(
+                            child: TextFormField(
+                              controller: email,
+                              validator: (string){
+                                if(string.isEmpty){
+                                  return 'Compulsory field cannot be empty';
+                                }
+                                registerControl.isValidEmail(email.text).then((emailCheck){
+                                  if(!emailCheck) {
+                                    return "Email Address is invalid. Please try again.";
+                                  }
+                                });
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                                  contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 20)),
+                            )
+                        ),
                         SizedBox(height: 10),
                         Text('*Password'),
-                        fieldBox(password, null, true),
-                        SizedBox(height: 10),
+                        Container(
+                            child: TextFormField(
+                              obscureText: true,
+                              controller: password,
+                              validator: (string){
+                                if(string.isEmpty){
+                                  return 'Compulsory field cannot be empty';
+                                }
+                                if(!registerControl.isValidPassword(password.text)) {
+                                  return "Password should contain at least 8 characters with: \n\tAt least 1 Uppercase\n\tAt least 1 Lowercase\n\tAt least 1 digit";
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                                  contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 20)),
+                            )
+                        ),                        SizedBox(height: 10),
                         Text('*Confirm password'),
                         Container(
                             child: TextFormField(
@@ -154,6 +222,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         Container(
                             child: TextFormField(
                               controller: nokName,
+                              validator: (string){
+                                if(dobFormat && yearNow - yearOfUser <= 12){
+                                  return 'Compulsory field cannot be empty';
+                                }
+                                return null;
+                              },
                               decoration: InputDecoration(
                                   hintText: 'For children <12 years old',
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
@@ -165,6 +239,15 @@ class _RegisterPageState extends State<RegisterPage> {
                         Container(
                             child: TextFormField(
                               controller: nokContact,
+                              validator: (string){
+                                if(yearNow - yearOfUser <= 12){
+                                  return 'Compulsory field cannot be empty';
+                                }
+                                if(!registerControl.isValidContactNum(int.parse(nokContact.text))) {
+                                  return "NOK contact number is invalid. Please try again.";
+                                }
+                                return null;
+                              },
                               decoration: InputDecoration(
                                   hintText: 'For children <12 years old',
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
@@ -191,9 +274,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               onPressed:(){
                               if(_formKey1.currentState.validate()){
                                   //if email not in db
+                                  String name = firstName.text + " " + lastName.text;
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
-                                          builder: (context) => HomePage())
+                                          builder: (context) => VerificationPage.fromUser(
+                                            name, dob.text, email.text, int.parse(contactNumber.text), password.text, nokName.text, int.parse(nokContact.text)
+                                          ))
                                   );
                               }
                           }),
@@ -204,7 +290,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 )
               ),
               Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey2,
               child: Padding(
               padding: EdgeInsets.all(30),
@@ -245,10 +330,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 if(string.isEmpty) {
                                   return 'Compulsory field cannot be empty';
                                 }
-                                try{
-                                  int.parse(string);
-                                } catch(e){
-                                  return 'Enter a valid number';
+                                if(!registerControl.isValidContactNum(int.parse(companyNumber.text))) {
+                                  return "Contact number is invalid. Please try again.";
                                 }
                                 return null;
                               },
@@ -259,10 +342,45 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                   SizedBox(height: 10),
                   Text('*Company Email'),
-                  fieldBox(companyEmail, null, false),
+                  Container(
+                            child: TextFormField(
+                              controller: companyEmail,
+                              validator: (string){
+                                if(string.isEmpty){
+                                  return 'Compulsory field cannot be empty';
+                                }
+                                registerControl.isValidEmail(companyEmail.text).then((emailCheck){
+                                  if(!emailCheck) {
+                                    return "Email Address is invalid. Please try again.";
+                                  }
+                                });
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                                  contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 20)),
+                            )
+                        ),
                   SizedBox(height: 10),
                         Text('*Password'),
-                        fieldBox(companyPassword, null, true),
+                        Container(
+                            child: TextFormField(
+                              obscureText: true,
+                              controller: companyPassword,
+                              validator: (string){
+                                if(string.isEmpty){
+                                  return 'Compulsory field cannot be empty';
+                                }
+                                if(!registerControl.isValidPassword(companyPassword.text)) {
+                                  return "Password should contain at least 8 characters with: \n\tAt least 1 Uppercase\n\tAt least 1 Lowercase\n\tAt least 1 digit";
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                                  contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 20)),
+                            )
+                        ),
                         SizedBox(height: 10),
                         Text('*Confirm password'),
                         Container(
@@ -305,9 +423,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                   //if email not in db
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
-                                          builder: (context) => HomePage())
+                                          builder: (context) => VerificationPage.fromVendor(
+                                            nameOfPOC.text, brn.text, companyName.text, int.parse(companyNumber.text), companyEmail.text, companyPassword.text
+                                          ))
                                   );
                                 }
+                                return;
                               }),
                         )
                       ]
