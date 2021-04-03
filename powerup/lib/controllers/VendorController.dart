@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:core';
 import 'package:powerup/entities/Session.dart';
 import 'package:powerup/entities/Vendor.dart';
 import 'package:powerup/entities/User.dart';
@@ -15,13 +16,13 @@ class VendorController {
   DBHelper dbHelper = new DBHelper();
 
   ///This is the constructor for the class.
-  VendorController();
+  VendorController() {}
 
 
   //ui call constructor for courses and session first
   ///This function add a course created by the vendor
   Future<bool> addCourseToDB(Course course, List<Session> sessions) async {
-    return  dbHelper.addCourse(course, sessions);
+    return dbHelper.addCourse(course, sessions);
   }
   ///This function removes an existing course from the vendor
   Future<bool> removeCourseFromDB(int courseToRemoveID, String vendorEmail) async {
@@ -29,18 +30,9 @@ class VendorController {
   }
 
   ///This function retrieves the participants list of a session.
-  Future<List<List<String>>> viewParticipants(int sessionID,int courseID) async {
-    List<List<String>> ListOfParticipantsList;
-    List<Session> sessionList = await dbHelper.getSessionsByCourse(courseID);
-    for(int i =0;i<sessionList.length;i++){
-      List<String> participantsList;
-      //first element is the sessionID string
-      participantsList.add(sessionID.toString());
-      participantsList = await dbHelper.getRegisterBySession(sessionID);
-      ListOfParticipantsList.add(participantsList);
-      sessionList.remove(sessionList[i]);
-    }
-     return ListOfParticipantsList;
+  Future<List<String>> viewParticipants(int sessionID) async {
+     List<String> participantsList = await dbHelper.getRegisterBySession(sessionID);
+     return participantsList;
   }
   ///This function retrieves the vacancy of a session.
   Future<int> getVacancyOfSession(int courseID, int sessionID) async{
@@ -53,8 +45,5 @@ class VendorController {
     }
     return vacancy;
   }
-// need to get the vendor's courses from db.
- Future<List<Course>> getVendorCreatedCourses(Vendor vendor){
-    return dbHelper.getVendorCourse(vendor);
- }
+
 }

@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class VendorProfile extends StatefulWidget {
   @override
   /// This function displays the Vendor Profile Page
