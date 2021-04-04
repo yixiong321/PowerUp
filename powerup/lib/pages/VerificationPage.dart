@@ -12,7 +12,6 @@ import 'HomePage.dart';
 
 class VerificationPage extends StatefulWidget {
 
-  TextEditingController email = TextEditingController();
   TextEditingController otpcontroller = TextEditingController();
   String name;
   String dob;
@@ -32,9 +31,9 @@ class VerificationPage extends StatefulWidget {
   LoginRegisterController lr_controller = new LoginRegisterController();
 
   // receive data from the FirstScreen as a parameter
-  VerificationPage({this.email, this.otpcontroller});
-  VerificationPage.fromUser(this.name, this.dob, this.userEmail, this.contactNumber, this.password, this.nokName, this.nokContact);
-  VerificationPage.fromVendor(this.nameOfPoc, this.brn, this.companyName, this.companyNumber, this.companyEmail, this.companyPassword);
+  /// VerificationPage({this.email, this.otpcontroller});
+  VerificationPage.fromUser(this.otpcontroller, this.name, this.dob, this.userEmail, this.contactNumber, this.password, this.nokName, this.nokContact);
+  VerificationPage.fromVendor(this.otpcontroller, this.nameOfPoc, this.brn, this.companyName, this.companyNumber, this.companyEmail, this.companyPassword);
 
 
   @override
@@ -44,19 +43,39 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> with TickerProviderStateMixin {
   User user;
+  Vendor vendor;
   ///the boolean to handle the dynamic operations
   bool submitValid = false;
   bool countdownEnd = false;
 
   ///testediting controllers to get the value from text fields
   TextEditingController _otpcontroller = TextEditingController();
-
+  String email;
+  String name;
+  String dob;
+  String userEmail;
+  int contactNumber;
+  String password;
+  String nokName;
+  int nokContact;
+  String nameOfPoc;
+  String brn;
+  String companyName;
+  int companyNumber;
+  String companyEmail;
+  String companyPassword;
 
   /// Edit timer here 5 to 1800 for 30 min
   AnimationController _controller;
   int levelClock = 5;
   int _counter;
   Timer _timer;
+
+  void assignEmail(String emailAss){
+    email = emailAss;
+    print("Hello");
+    print(email);
+  }
 
   void _startTimer(levelClock) {
     _counter = levelClock - 1;
@@ -77,6 +96,12 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
 
   @override
   void initState() {
+    if (widget.companyEmail == null) {
+      assignEmail(widget.userEmail);
+    }
+    else if (widget.userEmail == null) {
+      assignEmail(widget.companyEmail);
+    }
     super.initState();
 
     _startTimer(levelClock);
@@ -101,7 +126,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
   bool verify() {
     bool validate;
     validate = EmailAuth.validate(
-        receiverMail:widget.email.value.text,
+        receiverMail:email,
         userOTP: widget.otpcontroller.value.text);
     return validate;
   }
@@ -112,7 +137,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
   void sendOtp() async {
     EmailAuth.sessionName = "powerup";
     bool result =
-    await EmailAuth.sendOtp(receiverMail: widget.email.value.text);
+    await EmailAuth.sendOtp(receiverMail: email);
     if (result) {
       setState(() {
         submitValid = true;
@@ -162,7 +187,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
 
                       //Verification Functions
                       SizedBox(height: 30),
-                      Text('A verification code has been sent to ' + widget.email.text),
+                      Text('A verification code has been sent to ' + email),
                       Text(''),
                       Text('Please enter the corresponding verification OTP'),
                       fieldBox(widget.otpcontroller, null, false),
@@ -184,7 +209,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
                                     widget.contactNumber,
                                     widget.password,
                                     widget.nokName,
-                                    widget.nokContact).then((User user) {
+                                    widget.nokContact).then((user) {
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (context) =>
@@ -194,18 +219,17 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
                                   );
                                 });
                               }
-                              else if (widget.email == null) {
+                              else if (widget.userEmail == null) {
                                 /// vendor creation
                                 widget.lr_controller.createVendor(
                                     widget.companyEmail, widget.nameOfPoc,
                                     widget.companyNumber, widget.companyPassword,
                                     widget.brn, widget.companyName).then((
-                                    Vendor vendor) {
+                                    vendor) {
                                   Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              HomePage(user
-
+                                              VendorProfile(vendor
                                                 /// vendor object
                                                 // right now vendor object is replaced with user
                                                 // as the connections from verification page to
@@ -267,7 +291,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'OTP code has been resent to ' + widget.email.text,
+                                      'OTP code has been resent to ' + email,
                                       style: TextStyle(
                                         fontSize: 16,
                                       ),
@@ -277,10 +301,47 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
                                   ));
                               ///restart timer
                               ///verification code update
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => VerificationPage(email: widget.email, otpcontroller : _otpcontroller, ))
-                              );
+                              if (widget.companyEmail == null) {
+                                /// user creation
+                                widget.lr_controller.createUser(
+                                    widget.name,
+                                    widget.dob,
+                                    widget.userEmail,
+                                    widget.contactNumber,
+                                    widget.password,
+                                    widget.nokName,
+                                    widget.nokContact).then((user) {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              VerificationPage.fromUser(
+                                                _otpcontroller, name, dob, userEmail, contactNumber, password, nokName, nokContact
+                                              ))
+                                  );
+                                });
+                              }
+                              else if (widget.userEmail == null) {
+                                /// vendor creation
+                                widget.lr_controller.createVendor(
+                                    widget.companyEmail, widget.nameOfPoc,
+                                    widget.companyNumber, widget.companyPassword,
+                                    widget.brn, widget.companyName).then((
+                                    vendor) {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                            VerificationPage.fromVendor(
+                                            _otpcontroller, nameOfPoc, brn, companyName, companyNumber, companyEmail, companyPassword
+                                                /// vendor object
+                                                // right now vendor object is replaced with user
+                                                // as the connections from verification page to
+                                                // Vendor Profile page has not been established - jess
+                                              ))
+                                  );
+                                });
+
+                                /// vendor creation
+                              }
 
 
                             },

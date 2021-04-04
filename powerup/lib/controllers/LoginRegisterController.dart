@@ -29,6 +29,18 @@ class LoginRegisterController{
         }
         return null;          /// return true if email does not already exist in database
   }
+  
+
+  Future<Vendor> getVendorObj(String emailAddress) async {
+    var vendors = await DBHelper().getAllVendors();  /// Get list of User objects
+        /// check if the id attribute matches
+        for (int i = 0; i < vendors.length; i++) {
+          if (vendors[i].emailAddress == emailAddress)
+            return vendors[i];     /// return false if email matches in database (match --> email already in use)
+        }
+        return null;          /// return true if email does not already exist in database
+  }
+
 
   /// Function to send email with verification code upon successful registration
   /// called by function in UI after checkDetails()
@@ -119,18 +131,18 @@ vignesh123 : false
 VIGNESH123! : false
 12345678? : false
 */
-bool isValidPassword(String value){
-        String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
-        RegExp regExp = new RegExp(pattern);
-        return regExp.hasMatch(value);
-  }
+  bool isValidPassword(String value){
+          String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
+          RegExp regExp = new RegExp(pattern);
+          return regExp.hasMatch(value);
+    }
 
 
   /// Function to check contactNum
   bool isValidContactNum(int contactNum) {
     String contactNumStr = contactNum.toString();
-    final String pattern = '/\+65(6|8|9)\d{7}/g';
-    RegExp regExp = new RegExp(pattern);
+    print(contactNumStr);
+    RegExp regExp = new RegExp(r"^[6|8|9]\d{7}$");
 
     if (!regExp.hasMatch(contactNumStr)) {
       return false;
@@ -163,7 +175,7 @@ bool isValidPassword(String value){
   /// Function to process login for users/vendors with accounts in database
   /// return true if user/vendor found AND passwords match
   /// return false if username not found OR username found but password does not match.
-  Future<bool> login(String username, String password) async {
+  Future<String> login(String username, String password) async {
     /// Perform hashing for comparison with stored password later
     String hashedPassword = generateHash(password); //password;
     try {
@@ -174,9 +186,9 @@ bool isValidPassword(String value){
       for (int i = 0; i < userAccounts.length; i++) {
         if (userAccounts[i].emailAddress == username){
           if (userAccounts[i].passwordU == hashedPassword)
-            return true;
+            return "user";
           else
-            return false;     /// User found but passwordU does not match
+            return "Login Failed";     /// User found but passwordU does not match
         }
       }
 
@@ -184,9 +196,9 @@ bool isValidPassword(String value){
       for (int i = 0; i < vendorAccounts.length; i++) {
         if (vendorAccounts[i].emailAddress == username){
           if (vendorAccounts[i].passwordV == hashedPassword)
-            return true;
+            return "vendor";
           else
-            return false;     /// Vendor found but passwordV does not match
+            return "Login Failed";     /// Vendor found but passwordV does not match
         }
       }
     } catch (e) {
@@ -195,7 +207,7 @@ bool isValidPassword(String value){
     /// If control flow reaches here ==> either:
     /// account does not exist (through try block)
     /// caught error (through catch block)
-    return false;
+    return "Login Failed";
   }
 
 
@@ -230,6 +242,9 @@ bool isValidPassword(String value){
   Future<User> createUser(String name, String dob, String email, int contactNum, String passwordU, String nokName, int nokContactNum) async {
     String hashedPassword = "";
     /// Hash password for storage
+    print("createUser receives: " + name + dob+ email+ hashedPassword+ nokName);
+    print(contactNum);
+    print(nokContactNum);
     try {
       hashedPassword = generateHash(passwordU);
     } catch (e) {
@@ -248,10 +263,14 @@ bool isValidPassword(String value){
       return null;
     }
 
-    if (!(user == saveResult))
+    if (!(user == saveResult)) {
+      print("null");
       return null;
-    else
+    }
+    else {
+      print("User saved");
       return user;
+    } 
   }
 
 
