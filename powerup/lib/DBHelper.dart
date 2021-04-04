@@ -248,12 +248,19 @@ class DBHelper {
     var dbClient = await db;
     List<Map> maps = await dbClient.query(VendorTABLE, columns: [email,POCName,POCNum,passV,busRegNum,compName]);
     //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
+    // for (int i = 0; i < maps.length; i++) {
+    //   print(maps[i]);
+    // }
     List<Vendor> vendors = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
         vendors.add(Vendor.fromMap(maps[i]));
+        // print(vendors[i]);
       }
     }
+    // for (int i = 0; i < vendors.length; i++) {
+    //   print(vendors[i].emailAddress);
+    // }
     return vendors;
   }
 
