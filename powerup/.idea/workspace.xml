@@ -24,9 +24,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71728eb3-97ce-4d7d-b4c4-27a3b10c7994" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config_subset" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config_subset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/version" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/version" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/powerup.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/powerup.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/DBHelper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/DBHelper.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/controllers/UserController.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/controllers/UserController.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +63,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../src/flutter/bin/cache" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -98,6 +106,10 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1614702400503" />
+    <state x="397" y="143" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1617441876441">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="397" y="143" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.680@0.0.1280.680" timestamp="1617441876441" />
     <state x="446" y="57" key="#com.intellij.ide.util.MemberChooser" timestamp="1614745034325">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
@@ -106,30 +118,30 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="399" y="75" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1280.680@0.0.1280.680" timestamp="1615644818065" />
-    <state x="93" y="93" width="1095" height="495" key="AVDManager" timestamp="1616903429459">
+    <state x="160" y="137" width="1095" height="495" key="AVDManager" timestamp="1617517523077">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="93" y="93" width="1095" height="495" key="AVDManager/0.0.1280.680@0.0.1280.680" timestamp="1616903429459" />
-    <state x="454" y="106" key="FileChooserDialogImpl" timestamp="1616577846259">
+    <state x="160" y="137" width="1095" height="495" key="AVDManager/0.0.1280.680@0.0.1280.680" timestamp="1617517523077" />
+    <state x="454" y="106" key="FileChooserDialogImpl" timestamp="1617441944418">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="454" y="106" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1616577846259" />
-    <state width="1236" height="250" key="GridCell.Tab.0.bottom" timestamp="1616904648085">
+    <state x="454" y="106" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1617441944418" />
+    <state width="1236" height="250" key="GridCell.Tab.0.bottom" timestamp="1617516012858">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1236" height="250" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1616904648085" />
-    <state width="1236" height="250" key="GridCell.Tab.0.center" timestamp="1616904648085">
+    <state width="1236" height="250" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1617516012858" />
+    <state width="1236" height="250" key="GridCell.Tab.0.center" timestamp="1617516012858">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1236" height="250" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1616904648085" />
-    <state width="1236" height="250" key="GridCell.Tab.0.left" timestamp="1616904648085">
+    <state width="1236" height="250" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1617516012858" />
+    <state width="1236" height="250" key="GridCell.Tab.0.left" timestamp="1617516012857">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1236" height="250" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1616904648085" />
-    <state width="1236" height="250" key="GridCell.Tab.0.right" timestamp="1616904648085">
+    <state width="1236" height="250" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1617516012857" />
+    <state width="1236" height="250" key="GridCell.Tab.0.right" timestamp="1617516012858">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1236" height="250" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1616904648085" />
+    <state width="1236" height="250" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1617516012858" />
     <state x="172" y="0" key="SettingsEditor" timestamp="1615644444744">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
