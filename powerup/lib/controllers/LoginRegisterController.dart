@@ -181,24 +181,37 @@ VIGNESH123! : false
     try {
       var userAccounts = await DBHelper().getAllUsers();
       var vendorAccounts = await DBHelper().getAllVendors();
-
+      // for (int i = 0; i < vendorAccounts.length; i++) {
+      //   print(vendorAccounts[i].emailAddress);
+      // }
+      
       /// Check for users
       for (int i = 0; i < userAccounts.length; i++) {
         if (userAccounts[i].emailAddress == username){
-          if (userAccounts[i].passwordU == hashedPassword)
+          if (userAccounts[i].passwordU == hashedPassword) {
+            // print("Return value: user");
             return "user";
-          else
-            return "Login Failed";     /// User found but passwordU does not match
+          }
+          if (!(userAccounts[i].passwordU == hashedPassword)) {
+            // print("Return value: Failed");
+            return "Login Failed";          /// User found but passwordU does not match
+          }                 
         }
       }
 
       /// Check for vendors
       for (int i = 0; i < vendorAccounts.length; i++) {
         if (vendorAccounts[i].emailAddress == username){
-          if (vendorAccounts[i].passwordV == hashedPassword)
-            return "vendor";
-          else
+          if (vendorAccounts[i].passwordV == hashedPassword) {
+            // print("Return value: vendor");
+            return "vendor";            
+          }
+
+          if (!(vendorAccounts[i].passwordV == hashedPassword)) {
+            // print("Return value: Failed");
             return "Login Failed";     /// Vendor found but passwordV does not match
+          }
+            
         }
       }
     } catch (e) {
