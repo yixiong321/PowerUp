@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/services.dart';
+import 'dart:io' as io;
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,13 +7,10 @@ import 'package:powerup/entities/Course.dart';
 import 'package:powerup/entities/User.dart';
 import 'package:powerup/entities/Vendor.dart';
 import 'package:powerup/entities/Session.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
 
 class DBHelper {
   //DATABASE
   static Database _db;
-  
   static const String DB_NAME = 'MainDB.db';
 
   //User Table
@@ -86,42 +81,10 @@ class DBHelper {
   /// If the current database is not null, this function executes to retrieve the
   /// current database
   initDb() async {
-    /*Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_NAME);
     var db = await openDatabase(path, version: 1, onCreate: _onCreate, onConfigure: _onConfigure);
-    return db;*/
-    var databasesPath = await getDatabasesPath();
-    var path = join(databasesPath, "MainDB.db");
-
-// Check if the database exists
-    var exists = await databaseExists(path);
-
-    if (!exists) {
-      // Should happen only the first time you launch your application
-      print("Creating new copy from asset");
-
-      // Make sure the parent directory exists
-      try {
-        await Directory(dirname(path)).create(recursive: true);
-      } catch (_) {}
-
-      // Copy from asset
-      ByteData data = await rootBundle.load(join("assets", "MainDB.db"));
-      List<int> bytes =
-      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-
-      // Write and flush the bytes written
-      await File(path).writeAsBytes(bytes, flush: true);
-
-    } else {
-      print("Opening existing database");
-    }
-    // open the database
-    var db = await openDatabase(path, readOnly: false);
     return db;
-
-
-
   }
 
   /// This function creates all the tables for the database
@@ -131,34 +94,31 @@ class DBHelper {
         "$dob TEXT,$email TEXT PRIMARY KEY,$contactNum INTEGER, $passU TEXT,"
         "$NOKname TEXT,$NOKNum INTEGER)");
 
-    await db.execute("CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY, $POCName TEXT, $POCNum INTEGER, $passV TEXT, $busRegNum TEXT, $compName TEXT)");
+    await db.execute("CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY,"
+        "$POCName TEXT,"
+        "$POCNum INTEGER,"
+        "$passV TEXT,"
+        "$busRegNum TEXT,"
+        "$compName TEXT");
 
     await db.execute(
-        "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup INTEGER, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
+        "CREATE TABLE $CourseTABLE ($courseID INTEGER PRIMARY KEY, $courseTitle TEXT, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup TEXT, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT)");
 
     await db.execute(
-        "CREATE TABLE $FavTABLE ($email TEXT NOT NULL, $courseID INTEGER NOT NULL, PRIMARY KEY(\"emailAddress\", \"courseID\"),FOREIGN KEY(\"emailAddress\") REFERENCES \"User\"(\"emailAddress\") ON DELETE CASCADE)");
+        "CREATE TABLE $FavTABLE ($email TEXT PRIMARY KEY, $courseID INTEGER PRIMARY KEY, FOREIGN KEY ($email) REFERENCES $UserTABLE($email) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY ($courseID) REFERENCES $CourseTABLE($courseID) ON DELETE CASCADE ON UPDATE CASCADE");
 
     await db //Session
-        .execute("CREATE TABLE $SessionTABLE ($sessionID INTEGER NOT NULL, "
-        "$courseID INTEGER NOT NULL, $startDateOfSession TEXT NOT NULL, $dateTime TEXT NOT NULL, "
-        "$vacancy INTEGER NOT NULL, $classSize INTEGER NOT NULL, "
-        "PRIMARY KEY($sessionID AUTOINCREMENT),"
-        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID)"
-        "ON DELETE CASCADE)");
+        .execute("CREATE TABLE $SessionTABLE ($sessionID INTEGER PRIMARY KEY, "
+        "$courseID INTEGER PRIMARY KEY, $startDateOfSession TEXT, $dateTime TEXT, "
+        "$vacancy INTEGER, $classSize INTEGER, "
+        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID) ON UPDATE CASCADE ON DELETE CASCADE");
 
     await db //Register
-        .execute("CREATE TABLE $RegisterTABLE ($email TEXT NOT NULL, $sessionID INTEGER NOT NULL, $courseID INTEGER NOT NULL,"
-        "PRIMARY KEY($email, $sessionID, $courseID),"
-        "FOREIGN KEY($email) REFERENCES $UserTABLE($email)"
-        "ON DELETE CASCADE,"
-        "FOREIGN KEY($sessionID) REFERENCES $SessionTABLE($sessionID)"
-        "ON DELETE CASCADE,"
-        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID)"
-        "ON DELETE CASCADE)");
-
+        .execute("CREATE TABLE $RegisterTABLE ($email TEXT PRIMARY KEY, $sessionID INTEGER PRIMARY KEY, $courseID INTEGER PRIMARY KEY,"
+        "FOREIGN KEY($email) REFERENCES $UserTABLE($email) ON UPDATE CASCADE ON DELETE CASCADE,"
+        "FOREIGN KEY($sessionID) REFERENCES $SessionTABLE($sessionID) ON UPDATE CASCADE ON DELETE CASCADE,"
+        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID) ON UPDATE CASCADE ON DELETE CASCADE");
   }
-
   /// This function saves a Course object into the CourseTABLE
   Future<Course> saveCourse(Course course) async {
     var dbClient = await db;
@@ -168,7 +128,6 @@ class DBHelper {
 
   /// This function saves a User object into the UserTABLE
   Future<User> saveUser(User user) async {
-    print("DBHelper receives: ${user.name} ${user.DOB} ${user.contactNum} ${user.passwordU} ${user.NOKname}, ${user.NOKcontactNum}");
     var dbClient = await db;
     await dbClient.insert(UserTABLE, user.toMap());
     return user;
@@ -250,19 +209,12 @@ class DBHelper {
     var dbClient = await db;
     List<Map> maps = await dbClient.query(VendorTABLE, columns: [email,POCName,POCNum,passV,busRegNum,compName]);
     //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
-    // for (int i = 0; i < maps.length; i++) {
-    //   print(maps[i]);
-    // }
     List<Vendor> vendors = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
         vendors.add(Vendor.fromMap(maps[i]));
-        // print(vendors[i]);
       }
     }
-    // for (int i = 0; i < vendors.length; i++) {
-    //   print(vendors[i].emailAddress);
-    // }
     return vendors;
   }
 
@@ -336,18 +288,6 @@ class DBHelper {
       }
     }
     return courseList;
-  }
-
-  Future<List<Course>> getVendorCourse(Vendor vendor) async{
-    var dbClient = await db;
-    List<Map> maps = await dbClient.rawQuery(
-        "SELECT * FROM Course  WHERE contactNumOfPOC = ?", [vendor.contactNumOfPOC]);
-    List<Course> courses = []; //to store entries into a list of <objects>
-    if (maps.length > 0) {
-      for (int i = 0; i < maps.length; i++) {
-        courses.add(Course.fromMap(maps[i]));
-      }}
-      return courses;
   }
 
   /// This function deletes a Course object given a courseID from the CourseTABLE
@@ -472,31 +412,11 @@ class DBHelper {
   /// This function gets the email addresses of the participants of a course and sends them a notification.
   /// before removing the relevant data from respective tables.
   Future<bool> removeCourse(int courseID,String vendorEmail ) async{
-    String username = 'powerup_cz3003@gmail.com';
-    String password = 'password';
-    final smtpServer = gmailSaslXoauth2(username, password);
-
     List<Session> sessions = await getSessionsByCourse(courseID);
     for(int j=0;j<sessions.length;j++){
       List<String> emails = await getRegisterBySession(sessions[j].sessionID);
       for (int k=0;k<emails.length;k++){
-
-        // Create message
-        final message = Message()
-          ..from = Address(username, 'PowerUp!')
-          ..recipients.add(emails[k])
-          ..subject = 'PowerUp! Course Removal Notification :: ${DateTime.now()}'
-          ..text = '''Apologies. We regret to inform you that the course you have registered for has been removed.\n''';
-        //send email to notify participants
-        try {
-          final sendReport = await send(message, smtpServer);
-          print('Message sent: ' + sendReport.toString());
-        } on MailerException catch (e) {
-          print('Message not sent.');
-          for (var p in e.problems) {
-            print('Problem: ${p.code}: ${p.msg}');
-          }
-        }
+        //send email to notify participant
       }
     }
     for(int i=0;i<sessions.length;i++){
@@ -508,10 +428,6 @@ class DBHelper {
   }
 
   /// This function deletes a User from a Session from the SessionTABLE
-  /*Future<bool>deleteUserFromSession(String userEmail, int sessionID){
-  }*/
-
-
-
-
+  Future<bool>deleteUserFromSession(String userEmail, int sessionID){
+  }
 }

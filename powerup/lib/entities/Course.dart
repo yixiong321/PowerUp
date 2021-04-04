@@ -33,6 +33,13 @@ class Course{
       this._regDeadline,
       );
 
+  Course.forMain(String name, String company, double rating, String url){
+    this._courseTitle = name;
+    this._company = company;
+    this._rating = rating;
+    this._url = url;
+  }
+
   Map<String, dynamic> toMap(){
     var map = <String, dynamic>{
     'courseID' : _courseID,
@@ -56,7 +63,7 @@ class Course{
     _courseID = map['id'];
     _courseTitle = map['courseTitle'];
     _courseDesc = map['courseDesc'];
-    _company = map['companyName'];
+    _company = map['company'];
     _rating = map['rating'];
     _price = map['price'];
     _url = map['url'];

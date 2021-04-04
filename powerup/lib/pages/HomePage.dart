@@ -2,65 +2,40 @@ import 'dart:collection';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:powerup/entities/User.dart';
 import 'package:powerup/pages/CoursePage.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:powerup/entities/Course.dart';
 import 'package:powerup/pages/UserProfile.dart';
-import 'package:powerup/controllers/SearchController.dart';
 
 class HomePage extends StatefulWidget {
   @override
   /// This function displays the Home Page
-  User user;
-  HomePage(this.user);
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
-  List<Course> courseList = [];
   TextEditingController search = TextEditingController();
   bool showOrderBy = false;
   List<bool> selectedOrderBy;
   List<String> orderByCategories;
-  //SearchController searchController = SearchController();
-  //static List<eList = searchController.top5Courses();
-  // static List<Course> courseList = [
-  //   Course.forMain('Watercolor Course', 'ArtWithFriends', 4, 'assets/leatherworkshop.jpg'),
-  //   Course.forMain('Watercolor Course', 'ArtWithFriends', 3, 'assets/leatherworkshop.jpg'),
-  //   Course.forMain('Watercolor Course', 'ArtWithFriends', 3.5, 'assets/leatherworkshop.jpg'),
-  //   Course.forMain('Watercolor Course', 'ArtWithFriends', 4, 'assets/leatherworkshop.jpg'),
-  //   Course.forMain('Watercolor Course', 'ArtWithFriends', 3, 'assets/leatherworkshop.jpg'),
-  //   Course.forMain('Watercolor Course', 'ArtWithFriends', 3.5, 'assets/leatherworkshop.jpg'),
-  //   Course.forMain('Watercolor Course', 'ArtWithFriends', 4, 'assets/leatherworkshop.jpg'),
-  //   Course.forMain('Watercolor Course', 'ArtWithFriends', 3, 'assets/leatherworkshop.jpg'),
-  //   Course.forMain('Watercolor Course', 'ArtWithFriends', 3.5, 'assets/leatherworkshop.jpg'),
-  // ];
-
+  static List<Course> courseList = [
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 4, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3.5, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 4, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3.5, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 4, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3, 'assets/leatherworkshop.jpg'),
+    Course.forMain('Watercolor Course', 'ArtWithFriends', 3.5, 'assets/leatherworkshop.jpg'),
+  ];
   @override
   void initState(){
     super.initState();
     selectedOrderBy = [false, false, false, false];
     orderByCategories = ['PriceUp', 'PriceDown', 'Popularity', 'Ratings'];
-
-    retrieveCoursesForHomePage();
-
   }
-
-  //rename function later
-  void retrieveCoursesForHomePage() async {
-    courseList = await SearchController().allCourses();
-    setState(() {
-    });
-  }
-
-  void refresh() async {
-    courseList = await SearchController().allCourses();
-  }
-
-
 
   Widget courseTemplate(String name, String companyName, double rating, String url){
     return GestureDetector(
@@ -88,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.blueGrey,
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(url),
+                    image: AssetImage(url),
                   )
                 ),
               ),
@@ -235,20 +210,11 @@ class _HomePageState extends State<HomePage> {
                 elevation: 0,
                 onPressed: () {
                   setState(() {
-
-                    if(!FilterChipWidgetState.selectedFilters.isEmpty) {
+                    if(!FilterChipWidgetState.selectedFilters.isEmpty)
                       showOrderBy = true;
-                      courseList = SearchController().search(search.text, courseList);
-                      courseList = SearchController().sFilterLocationAgeGroupStartMonth(
-                          FilterChipWidgetState.selectedFilters, courseList);
-                    }
-                    else {
+                    else
                       showOrderBy = false;
-                      courseList = SearchController().search(search.text, courseList);
-                    }
-                    refresh();
                   });
-                  print("hellothere");
                   print(FilterChipWidgetState.selectedFilters);
                   Navigator.of(context).pop();
                 },
@@ -323,21 +289,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                       IconButton(icon: Icon(Icons.search), onPressed: (){
                         setState(() {
-                          if(!search.text.isEmpty) {
-
+                          if(!search.text.isEmpty)
                             showOrderBy = true;
-                            courseList = SearchController().search(
-                                search.text, courseList);
-                            courseList = SearchController().sFilterLocationAgeGroupStartMonth(
-                                FilterChipWidgetState.selectedFilters, courseList);
-                          }
-
-                          else {
+                          else
                             showOrderBy = false;
-                            courseList = SearchController().sFilterLocationAgeGroupStartMonth(
-                                FilterChipWidgetState.selectedFilters, courseList);
-                          }
-                          refresh();
+                          //courseList = Course.search(search.text, courseList);
                         });
                         FocusManager.instance.primaryFocus.unfocus();
                       }),
@@ -392,7 +348,6 @@ class _HomePageState extends State<HomePage> {
                           ],
                         constraints: BoxConstraints(minWidth: 90, maxWidth: 90, minHeight: kMinInteractiveDimension),
                         onPressed: (index){
-
                           setState(() {
                             for (int i = 0; i < selectedOrderBy.length; i++) {
                               selectedOrderBy[i] = i == index;
@@ -409,7 +364,6 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Scrollbar(
                       child: ListView.builder(
-
                         itemCount: courseList.length,
                         itemBuilder: (context, index){
                           return courseTemplate(courseList[index].courseTitle, courseList[index].company, courseList[index].rating, courseList[index].url);
