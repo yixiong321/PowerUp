@@ -24,12 +24,12 @@ class Vendor{
   }
 
   Vendor.fromMap(Map<String,dynamic> map){
-    _emailAddress=map['_emailAddress'];
-    _nameOfPOC= map['_nameOfPOC'];
-    _contactNumOfPOC=map['_contactNumOfPOC'];
-    _passwordV=map['_passwordV'];
-    _busRegNum=map['_busRegNum'];
-    _companyName=map['_companyName'];
+    _emailAddress=map['emailAddress'];
+    _nameOfPOC= map['nameOfPOC'];
+    _contactNumOfPOC=map['contactNumOfPOC'];
+    _passwordV=map['passwordV'];
+    _busRegNum=map['busRegNum'];
+    _companyName=map['companyName'];
     //_vendorCourseList=map['_vendorCourseList'];
   }
 
