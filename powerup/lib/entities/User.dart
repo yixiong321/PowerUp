@@ -16,7 +16,7 @@ class User {
       'name':_name,
       'DOB': _DOB,
       'emailAddress': _emailAddress,
-      'contactNum': _contactNum,
+      'int': _contactNum,
       'passwordU': _passwordU,
       'NOKname': _NOKname,
       'NOKcontactNum': _NOKcontactNum,
@@ -28,7 +28,7 @@ class User {
     _name = map['name'];
     _DOB = map['DOB'];
     _emailAddress = map['emailAddress'];
-    _contactNum= map['contactNum'];
+    _contactNum= map['int'];
     _passwordU= map['passwordU'];
     _NOKname= map['NOKname'];
     _NOKcontactNum= map['NOKcontactNum'];
