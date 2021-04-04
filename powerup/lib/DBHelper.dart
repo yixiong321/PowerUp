@@ -9,6 +9,8 @@ import 'package:powerup/entities/Course.dart';
 import 'package:powerup/entities/User.dart';
 import 'package:powerup/entities/Vendor.dart';
 import 'package:powerup/entities/Session.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class DBHelper {
   //DATABASE
@@ -463,11 +465,31 @@ class DBHelper {
   /// This function gets the email addresses of the participants of a course and sends them a notification.
   /// before removing the relevant data from respective tables.
   Future<bool> removeCourse(int courseID,String vendorEmail ) async{
+    String username = 'powerup_cz3003@gmail.com';
+    String password = 'password';
+    final smtpServer = gmailSaslXoauth2(username, password);
+
     List<Session> sessions = await getSessionsByCourse(courseID);
     for(int j=0;j<sessions.length;j++){
       List<String> emails = await getRegisterBySession(sessions[j].sessionID);
       for (int k=0;k<emails.length;k++){
-        //send email to notify participant
+
+        // Create message
+        final message = Message()
+          ..from = Address(username, 'PowerUp!')
+          ..recipients.add(emails[k])
+          ..subject = 'PowerUp! Course Removal Notification :: ${DateTime.now()}'
+          ..text = '''Apologies. We regret to inform you that the course you have registered for has been removed.\n''';
+        //send email to notify participants
+        try {
+          final sendReport = await send(message, smtpServer);
+          print('Message sent: ' + sendReport.toString());
+        } on MailerException catch (e) {
+          print('Message not sent.');
+          for (var p in e.problems) {
+            print('Problem: ${p.code}: ${p.msg}');
+          }
+        }
       }
     }
     for(int i=0;i<sessions.length;i++){
