@@ -2,26 +2,79 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:powerup/entities/Course.dart';
+import 'package:powerup/entities/User.dart';
+import 'package:powerup/entities/Session.dart';
+import 'package:powerup/controllers/UserController.dart';
 
 class CoursePage extends StatefulWidget {
   @override
-  //All the parameters required for CoursePage that is brought forward from Home Page - LI SHENG
-  String courseName;
+  User user;
+  Course course;
   bool registered;
-  CoursePage(this.registered, this.courseName);
+  CoursePage(this.registered, this.course, this.user);
   /// This function displays the Course Page
   _CoursePageState createState() => _CoursePageState();
 }
 
 class _CoursePageState extends State<CoursePage> {
-  String sessionChosen;
-  List sessionList = ["Session 1", "Session 2", "Session 3"];
+  String allSessions = "";
   final _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
-  //bool registered;
+  UserController userController = UserController();
+  List<Session> sessions = [];
+  Session selectedSession;
+  bool favourite = false;
+
+  Future<String> allSessionsForCourse() async{
+    List<Session> sessionList = await userController.getAllSessionByCourse(widget.course.courseID);
+    String string = "";
+    for(int i = 0; i < sessionList.length; i++){
+        string += "Session " + (i+1).toString() + ": " + sessionList[i].startDate + ", " + sessionList[i].dateTime + "\n";
+    }
+    return string;
+  }
+
+  allSessionsForCourseStr() {
+    allSessionsForCourse().then((string) {
+      allSessions = string;
+      if(mounted) {
+        setState(() {});
+      }
+    });
+  }
+  Future<List<Session>> allSessionsWithVac() async{
+    return await userController.getAvailSessionByCourse(widget.course.courseID);
+  }
+
+  checkFavourite() {
+    userController.containsFavoriteCourse(widget.user.emailAddress, widget.course.courseID).then((value){
+      favourite = value;
+    });
+    setState(() {
+
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    allSessionsWithVac().then((list){
+      selectedSession = list[0];
+    });
+  }
+  /*Future<List> allSessionsWithVacancy() async{
+    List<Session> sessionList = await userController.getAvailSessionByCourse(widget.course.courseID);
+    List sessions = [];
+    for(int i = 0; i < sessionList.length; i++){
+      sessions.add("Session " + (i+1).toString() + ": " + sessionList[i].startDate + ", " + sessionList[i].dateTime + ", vacancy = " + sessionList[i].vacancy.toString());
+    }
+    return sessions;
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    allSessionsForCourseStr();
+    checkFavourite();
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Stack(
@@ -37,18 +90,39 @@ class _CoursePageState extends State<CoursePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Image.asset(
-                    'assets/leatherworkshop.jpg',
+                Image.network(
+                    widget.course.url,
                     fit: BoxFit.fitWidth,
                 ),
                 SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.favorite),
+                      color: favourite?Colors.red[700]:Colors.grey[350],
+                      iconSize: 40,
+                      onPressed: (){
+                        setState(() {
+                          if(favourite){
+                            favourite = false;
+                            userController.removeFavoriteCourseFromList(widget.user.emailAddress, widget.course.courseID);
+                          }
+                          else{
+                            favourite = true;
+                            userController.addFavoriteCourseToList(widget.user.emailAddress, widget.course.courseID);
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                   child: Column(
                     children: [
-
                       Text(
-                          widget.courseName,
+                          widget.course.courseTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 24,
@@ -57,7 +131,7 @@ class _CoursePageState extends State<CoursePage> {
                       ),
                       SizedBox(height: 30),
                       Text(
-                          'WeatherLeather Pte Ltd. presents a workshop for beginners on the basics of leathercrafting. In this exciting series, you will learn to craft simple accessories such as pouches and keyrings.',
+                        widget.course.courseDesc,
                           style: TextStyle(
                             fontSize: 16,
                           )
@@ -68,21 +142,23 @@ class _CoursePageState extends State<CoursePage> {
                           Icons.monetization_on_rounded,
                           color: Colors.red[700],
                         ),
-                        title: Text("Course fees: \$58"),
+                        title: Text("Course fees: \$" + widget.course.price.toString(),),
                       ),
                       ListTile(
                         leading: Icon(
                           Icons.location_on,
                           color: Colors.red[700],
                         ),
-                        title: Text('123 Tanjong Pagar Ris, Singapore 29384'),
+                        title: Text(widget.course.location),
                       ),
                       ListTile(
                         leading: Icon(
                           Icons.calendar_today,
                           color: Colors.red[700],
                         ),
-                        title: Text('Session 1: 21-02-21, 1400-1700 Session 2: 25-02-21, 1400-1700 Session 3: 27-02-21, 1400-1700'),
+                        title: Text(
+                          allSessions,
+                        ),
                       ),
                       SizedBox(height: 50),
                       (!widget.registered) ?
@@ -96,12 +172,22 @@ class _CoursePageState extends State<CoursePage> {
                               ),
                                 context: context,
                                 builder: (context){
-                              return Padding(
+                                return Padding(
                                 padding: const EdgeInsets.all(32),
                                 child: Container(
                                   height: 250,
                                   child: StatefulBuilder(
                                     builder: (context, setState){
+                                      userController.getAvailSessionByCourse(widget.course.courseID).then((list) {
+                                        sessions = list;
+                                        if(this.mounted){
+                                          setState((){
+                                          });
+                                        }
+                                        else{
+                                          return;
+                                        }
+                                      });
                                       return Column(
                                         children: [
                                           SizedBox(height: 20),
@@ -117,17 +203,23 @@ class _CoursePageState extends State<CoursePage> {
                                             autovalidate: _autovalidate,
                                             child: DropdownButtonFormField(
                                               hint: Text("Select session"),
-                                              value: sessionChosen,
+                                              value: selectedSession.sessionID,
                                               validator: (value) => value == null ? 'Please select a session': null,
-                                              onChanged: (newValue){
+                                              onChanged: (newSession){
                                                 setState(() {
-                                                  sessionChosen = newValue;
+                                                  for(int i = 0; i < sessions.length; i++){
+                                                    if(sessions[i].sessionID == newSession){
+                                                      selectedSession = sessions[i];
+                                                    }
+                                                  }
                                                 });
                                               },
-                                              items: sessionList.map((valueItem){
+                                              items: sessions.map((session){
                                                 return DropdownMenuItem(
-                                                  value: valueItem,
-                                                  child: Text(valueItem),
+                                                  value: session.sessionID,
+                                                  child: Text(
+                                                      session.startDate + ", " + session.dateTime + "\n",
+                                                  ),
                                                 );
                                               }).toList(),
                                             ),
@@ -144,6 +236,7 @@ class _CoursePageState extends State<CoursePage> {
                                               ),
                                               onPressed: (){
                                                 if(_formKey.currentState.validate()){
+                                                  userController.addCourseToList(widget.course.courseID, selectedSession.sessionID, widget.user.emailAddress);
                                                   widget.registered = true;
                                                   _formKey.currentState.save();
                                                   Navigator.of(context).pop();
@@ -172,7 +265,7 @@ class _CoursePageState extends State<CoursePage> {
                                                                       ),
                                                                       SizedBox(height: 20),
                                                                       Text(
-                                                                          widget.courseName,
+                                                                          widget.course.courseTitle,
                                                                         style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                                                                         textAlign: TextAlign.center,
                                                                       ),
@@ -183,7 +276,7 @@ class _CoursePageState extends State<CoursePage> {
                                                                           color: Colors.red[700],
                                                                         ),
                                                                         title: Text(
-                                                                            "Course fees: \$58",
+                                                                            "Course fees: \$" + widget.course.price.toString(),
                                                                           style: TextStyle(fontSize: 20),
                                                                         ),
                                                                       ),
@@ -193,7 +286,7 @@ class _CoursePageState extends State<CoursePage> {
                                                                           color: Colors.red[700],
                                                                         ),
                                                                         title: Text(
-                                                                            '123 Tanjong Pagar Ris, Singapore 29384',
+                                                                            widget.course.location,
                                                                           style: TextStyle(fontSize: 20),
                                                                         ),
                                                                       ),
@@ -203,7 +296,7 @@ class _CoursePageState extends State<CoursePage> {
                                                                           color: Colors.red[700],
                                                                         ),
                                                                         title: Text(
-                                                                          sessionChosen,
+                                                                          selectedSession.startDate + ", " + selectedSession.dateTime,
                                                                           style: TextStyle(fontSize: 20),
                                                                         ),
                                                                       ),
@@ -213,7 +306,7 @@ class _CoursePageState extends State<CoursePage> {
                                                                         Navigator.of(context).pop();
                                                                         Navigator.push(context, MaterialPageRoute(
                                                                             builder: (context) => CoursePage(
-                                                                                widget.registered, widget.courseName,
+                                                                                widget.registered, widget.course, widget.user
                                                                             )));
                                                                       },
                                                                         color: Colors.red,
@@ -263,6 +356,7 @@ class _CoursePageState extends State<CoursePage> {
                       ) : RaisedButton(
                         child: Text("Withdraw"),
                         onPressed: (){
+                          userController.withdrawCourseFromList(widget.user.emailAddress, widget.course.courseID);
                           showDialog(
                             barrierDismissible: false,
                             context: context,
@@ -284,7 +378,7 @@ class _CoursePageState extends State<CoursePage> {
                                         Navigator.of(context).pop();
                                         Navigator.push(context, MaterialPageRoute(
                                             builder: (context) => CoursePage(
-                                              widget.registered, widget.courseName,
+                                              widget.registered, widget.course, widget.user
                                             )));
                                       },
                                     ),

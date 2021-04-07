@@ -34,9 +34,9 @@ class UserController {
   }
 
   /// This function registers the course to this controllers user's object
-  Future<bool> addCourseToList(int courseID, int sessionID,
+  void addCourseToList(int courseID, int sessionID,
       String emailAddress) async {
-    return dbHelper.saveRegister(courseID, sessionID, emailAddress);
+    dbHelper.saveRegister(courseID, sessionID, emailAddress);
   }
 
   /// This function withdraw the course from this controllers user's object
@@ -83,7 +83,7 @@ class UserController {
   Future<bool> containsFavoriteCourse(String emailAddress, int courseID) async {
     var dbClient = await dbHelper.db;
     List<Map> maps = await dbClient.rawQuery(
-        "SELECT * from FavTABLE WHERE email = ? AND courseID = ?",
+        "SELECT * from Favourite WHERE emailAddress = ? AND courseID = ?",
         [emailAddress, courseID]);
     if (maps.isEmpty) {
       return false;
@@ -91,17 +91,30 @@ class UserController {
     return true;
   }
 
+  Future<List<Session>> getAllSessionByCourse(int courseID) async{
+    return await dbHelper.getSessionsByCourse(courseID);
+  }
+
   Future<List<Session>> getAvailSessionByCourse(int courseID) async {
-    List<Session> SessionList = await dbHelper.getSessionsByCourse(courseID);
-    List<Session> vacancyList;
-    for (int i = 0; i < SessionList.length; i++) {
-      if (SessionList[i].vacancy > 0) {
-        vacancyList.add(SessionList[i]);
+    List<Session> sessionList = await dbHelper.getSessionsByCourse(courseID);
+    List<Session> vacancyList = [];
+    for (int i = 0; i < sessionList.length; i++) {
+      if (sessionList[i].vacancy > 0) {
+        vacancyList.add(sessionList[i]);
       }
     }
     return vacancyList;
   }
 
+  Future<bool> checkUserRegisteredForCourse(String emailAddress, int courseID) async {
+    List<Course> courseList = await dbHelper.getRegisterByUser(emailAddress);
+    for(int i = 0; i < courseList.length; i++){
+      if(courseList[i].courseID == courseID){
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 

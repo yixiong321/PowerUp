@@ -8,7 +8,7 @@ class Session{
   List<String> participantList;
   //---------Constructors---------//
   Session(this._sessionID, this._numberOfClasses, this._startDate,
-      this._dateTime, this._vacancy, this._classSize, this.participantList);
+      this._dateTime, this._vacancy, this._classSize);
   Session.empty();
   //---------Database---------//
   Map<String, dynamic> toMap() {
