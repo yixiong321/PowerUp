@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:powerup/pages/HomePage.dart';
 import 'package:powerup/controllers/LoginRegisterController.dart';
 import 'package:powerup/pages/RegisterPage.dart';
+import 'package:powerup/entities/User.dart';
+import 'package:powerup/pages/VendorProfile.dart';
+
+import '../DBHelper.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,6 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   var _formKey = GlobalKey<FormState>();
+  var dbHelper = DBHelper().db;
+  User user;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,29 +104,48 @@ class _LoginPageState extends State<LoginPage> {
                                   onPressed: (){
                                     FocusScope.of(context).requestFocus(FocusNode());
                                     if(_formKey.currentState.validate()){
-                                      if(LoginRegisterController.accountInDB(email.text, password.text)){
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) => HomePage())
-                                        );
-                                      }
-                                      else{
-                                        SnackBar sb = SnackBar(
-                                          content: Text(
-                                              'The email or password is invalid or the account does not exist',
-                                              style: TextStyle(
-                                              fontSize: 16,
-                                          ),
-                                          ),
-                                          backgroundColor: Colors.redAccent,
-                                          duration: Duration(seconds: 5),
-                                        );
-                                        Scaffold.of(context)
-                                          ..hideCurrentSnackBar()
-                                          ..showSnackBar(sb);
-                                      }
-                                    }
-                                  },
+                                      LoginRegisterController().login(email.text, password.text).then((loginCheck){
+                                        if(loginCheck == "user"){
+                                          LoginRegisterController().getUserObj(email.text).then((user){
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) => HomePage(
+                                                    user
+                                                  ))
+                                            );
+                                          });
+                                          
+                                        }
+                                        else if (loginCheck == "vendor"){
+                                          LoginRegisterController().getVendorObj(email.text).then((vendor){
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) => VendorProfile(
+                                                    vendor
+                                                  ))
+                                            );
+                                          });
+                                          
+                                        }
+                                        else{
+                                          SnackBar sb = SnackBar(
+                                            content: Text(
+                                                'The email or password is invalid or the account does not exist',
+                                                style: TextStyle(
+                                                fontSize: 16,
+                                            ),
+                                            ),
+                                            backgroundColor: Colors.redAccent,
+                                            duration: Duration(seconds: 5),
+                                          );
+                                          Scaffold.of(context)
+                                            ..hideCurrentSnackBar()
+                                            ..showSnackBar(sb);
+                                        } /// else
+                                      } /// inside then
+                                      ); /// then
+                                    } /// if (_formkey)
+                                  }, /// on pressed
                                   child: Text(
                                       "Login",
                                       textAlign: TextAlign.center,
