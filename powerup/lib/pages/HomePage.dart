@@ -254,15 +254,15 @@ class _HomePageState extends State<HomePage> {
                 elevation: 0,
                 onPressed: () {
                   setState(() {
-                    if(!FilterChipWidgetState.selectedFilters.isEmpty) {
+                    if(FilterChipWidgetState.selectedFilters.isNotEmpty) {
                       showOrderBy = true;
-                      courseList = searchController.search(search.text, courseList);
+                      courseList = searchController.search(search.text, fullList);
                       courseList = searchController.sFilterLocationAgeGroupStartMonth(
                           FilterChipWidgetState.selectedFilters, courseList);
                     }
                     else {
                       showOrderBy = false;
-                      courseList = searchController.search(search.text, courseList);
+                      courseList = searchController.search(search.text, fullList);
                     }
                     refresh(courseList);
                   });
@@ -301,7 +301,9 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.account_circle),
             onPressed: (){
               Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => UserProfile()));
+                  builder: (context) => UserProfile(
+                    widget.user
+                  )));
             },
             color: Colors.black,
             iconSize: 30,
@@ -341,19 +343,17 @@ class _HomePageState extends State<HomePage> {
                     ),
                       IconButton(icon: Icon(Icons.search), onPressed: (){
                         setState(() {
-                          if(!search.text.isEmpty) {
+                          if(search.text.isNotEmpty) {
                             showOrderBy = true;
                             courseList = searchController.search(
-                                search.text, courseList);
+                                search.text, fullList);
                             courseList = searchController.sFilterLocationAgeGroupStartMonth(
                                 FilterChipWidgetState.selectedFilters, courseList);
-
                           }
-
                           else {
                             showOrderBy = false;
                             courseList = searchController.sFilterLocationAgeGroupStartMonth(
-                                FilterChipWidgetState.selectedFilters, courseList);
+                                FilterChipWidgetState.selectedFilters, fullList);
                           }
                           refresh(courseList);
                         });
@@ -427,7 +427,7 @@ class _HomePageState extends State<HomePage> {
                               }
                               if(index == 2){
                                 getPopularityForHomePage(courseList).then((value){
-                                  refresh(courseList);
+                                  refresh(value);
                                 });
                               }
                               if(index == 3){

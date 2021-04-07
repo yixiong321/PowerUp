@@ -279,14 +279,15 @@ class DBHelper {
   Future<List<Course>> getFavForUser(String email) async {
     var dbClient = await db;
     List<Map> maps = await dbClient.rawQuery(
-        "SELECT $courseID FROM $FavTABLE WHERE $courseID = ? ", [email]);
-    List<Course> courses = [];
+        "SELECT courseID from Favourite WHERE emailAddress = ?", [email]);
+    List<Course> courseList = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
-        courses.add(Course.fromMap(maps[i]));
+        Course course = await getCourseById(maps[i]['courseID']);
+        courseList.add(course);
       }
     }
-    return courses;
+    return courseList;
   }
 
   /// This function returns a list of Sessions from the SessionTABLE
@@ -556,25 +557,20 @@ class DBHelper {
         }
       }
     }
-    /*List<Course> courses = await getAllCourses();
+    List<Course> courses = list;
     bool exist = false;
     for(int i = 0; i < courses.length; i++){
-      print(courses[i].courseID);
       exist = false;
       for(int j = 0; j < courseList.length; j++){
-        print(courseList[j].courseID);
         if(courseList[j].courseID == courses[i].courseID) {
           exist = true;
           break;
         }
       }
-      print("exist");
-      print(exist);
       if(exist == false){
-        print("IM HERE");
         courseList.add(courses[i]);
       }
-    }*/
+    }
     return courseList;
   }
 

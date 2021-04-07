@@ -20,14 +20,6 @@ class SearchController {
     "December": 12
   };
 
-  Map<String, String> ageMap = {
-    "7-12" : "0",
-    "13-18" : "1",
-    '19-35' : "2",
-    '36-55' : "3",
-    '56-67' : "4",
-  };
-
   List<Course> courseList = [];
   /// Maps first 2 digits of postal code stored in database to zone
   String getLocation (String address) {
@@ -117,7 +109,7 @@ class SearchController {
       }
       print("locations");
       print(locations.length);
-      if (filters[i] == "7-12" || filters[i] == "13-18" ||
+      if (filters[i] == '7-12' || filters[i] == '13-18' ||
           filters[i] == '19-35' || filters[i] == '36-55' ||
           filters[i] == '56-67') {
         ageGroups.add(filters[i]);
@@ -192,18 +184,10 @@ class SearchController {
   /// meet any filter value defined for age group criteria (e.g. '13-18' OR '19-35')
   List<Course> filterAgeGroup(List<String> ageGroups,
       List<Course> listOfCourses) {
-    List<String> ageList = [];
     List<Course> filteredCourseList = []; //return variable
-
-    for (int i = 0; i < ageGroups.length; i++) {
-      ageList.add(ageMap[ageGroups[i]]);
-    }
-    print("MARKER");
-    print(ageList);
-
     for (int i = 0; i < listOfCourses.length; i++) {
-      for (int j = 0; j < ageList.length; j++) {
-        if (listOfCourses[i].ageGroup == ageList[j]) {
+      for (int j = 0; j < ageGroups.length; j++) {
+        if (listOfCourses[i].ageGroup == ageGroups[j]) {
           filteredCourseList.add(listOfCourses[i]);
         }
       }
@@ -297,17 +281,6 @@ class SearchController {
   }
 
   Future<List<Course>> getPopularityForHomePage(List<Course> list) async{
-    return await DBHelper().getPopularityByCourse(list); /// courses with popularity
-    /// Sorry idk the most efficient way to handle this
-    /// This is to add the remaining courseList that do not have a rating to the
-    /// return value : courseList
-    /*for (int i = 0; i< list.length; i++) {
-      for (int j = 0; j<courseList.length; j++) {
-        if (list[i] == courseList[j]) {
-
-        }
-      }
-    }
-    return courseList;*/
+    return await DBHelper().getPopularityByCourse(list);
   }
 }

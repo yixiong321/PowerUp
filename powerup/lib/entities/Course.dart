@@ -12,7 +12,7 @@ class Course{
   String _location;
   String _ageGroup;
   String _pocName;
-  int _pocContactNumber;
+  int _contactNumOfPOC;
   String _startDate;
   String _regDeadline;
   List<Session> sessionList;
@@ -28,7 +28,7 @@ class Course{
       this._location,
       this._ageGroup,
       this._pocName,
-      this._pocContactNumber,
+      this._contactNumOfPOC,
       this._startDate,
       this._regDeadline,
       );
@@ -45,7 +45,7 @@ class Course{
     'location' : _location,
     'ageGroup' : _ageGroup,
     'pocName' : _pocName,
-    'pocContactNumber' : _pocContactNumber,
+    'contactNumOfPOC' : _contactNumOfPOC,
     'startDate' : _startDate,
     'regDeadline' : _regDeadline,
     };
@@ -63,7 +63,7 @@ class Course{
     _location = map['location'];
     _ageGroup = map['ageGroup'];
     _pocName = map['pocName'];
-    _pocContactNumber = map['pocContactNumber'];
+    _contactNumOfPOC = map['contactNumOfPOC'];
     _startDate = map['startDate'];
     _regDeadline = map['regDeadline'];
   }
@@ -127,10 +127,10 @@ class Course{
     _pocName = value;
   }
 
-  int get pocContactNumber => _pocContactNumber;
+  int get pocContactNumber => _contactNumOfPOC;
 
   set pocContactNumber(int value) {
-    _pocContactNumber = value;
+    _contactNumOfPOC = value;
   }
 
   String get startDate => _startDate;
