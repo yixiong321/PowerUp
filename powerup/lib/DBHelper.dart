@@ -444,6 +444,7 @@ class DBHelper {
         where: '$courseID = ?', whereArgs: [course.courseID]);
     return true;
   }
+  }
 
   /// This function updates the User object in the UserTABLE
   Future<bool> updateUser(User user) async {
@@ -577,7 +578,7 @@ class DBHelper {
   }*/
 
   /// Singleton
-  static DBHelper single_instance = null; 
+    static DBHelper single_instance = null; 
     static DBHelper getInstance() 
     { 
         if (single_instance == null) 
@@ -585,4 +586,5 @@ class DBHelper {
   
         return single_instance; 
     }
+
 }

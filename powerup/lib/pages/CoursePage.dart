@@ -191,7 +191,7 @@ class _CoursePageState extends State<CoursePage> {
                             Icons.phone,
                             color: Colors.red[700],
                           ),
-                          title: Text(widget.course.pocContactNumber.toString())
+                          title: Text(widget.course.contactNumOfPOC.toString())
                         ),
                         ListTile(
                           leading: Icon(

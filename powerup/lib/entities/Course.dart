@@ -17,6 +17,20 @@ class Course{
   String _regDeadline;
   List<Session> sessionList;
 
+  Course(
+      this._courseTitle,
+      this._courseDesc,
+      this._company,
+      this._price,
+      this._url,
+      this._location,
+      this._ageGroup,
+      this._nameOfPOC,
+      this._contactNumOfPOC,
+      this._startDate,
+      this._regDeadline,
+      );
+
   // Course(
   //     this._courseID,
   //     this._courseTitle,
@@ -32,9 +46,42 @@ class Course{
   //     this._regDeadline,
   //     );
 
-  Course(
-      this._courseTitle,
-      this._courseDesc,
+  // Course(
+  //     this._courseTitle,
+  //     this._courseDesc,
+  //   'courseTitle' : _courseTitle,
+  //   'courseDesc' : _courseDesc,
+  //   'companyName' : _company,
+  //   'rating' : _rating,
+  //   'price' : _price,
+  //   'url' : _url,
+  //   'location' : _location,
+  //   'ageGroup' : _ageGroup,
+  //   'nameOfPOC' : _nameOfPOC,
+  //   'contactNumOfPOC' : _contactNumOfPOC,
+  //   'startDate' : _startDate,
+  //   'regDeadline' : _regDeadline,
+  //   };
+  //   return map;
+  // }
+
+  Course.fromMap(Map<String,dynamic> map){
+    _courseID = map['courseID'];
+    _courseTitle = map['courseTitle'];
+    _courseDesc = map['courseDesc'];
+    _company = map['companyName'];
+    _rating = map['rating'];
+    _price = map['price'];
+    _url = map['url'];
+    _location = map['location'];
+    _ageGroup = map['ageGroup'];
+    _nameOfPOC = map['nameOfPOC'];
+    _regDeadline = map['regDeadline'];
+  }
+
+  Map<String, dynamic> toMap(){
+    var map = <String, dynamic>{
+    'courseID' : _courseID,
     'courseTitle' : _courseTitle,
     'courseDesc' : _courseDesc,
     'companyName' : _company,
@@ -50,20 +97,6 @@ class Course{
     };
     return map;
   }
-
-  Course.fromMap(Map<String,dynamic> map){
-    _courseID = map['courseID'];
-    _courseTitle = map['courseTitle'];
-    _courseDesc = map['courseDesc'];
-    _company = map['companyName'];
-    _rating = map['rating'];
-    _price = map['price'];
-    _url = map['url'];
-    _location = map['location'];
-    _ageGroup = map['ageGroup'];
-    _pocName = map['pocName'];
-    _nameOfPOC = map['nameOfPOC'];
-    _regDeadline = map['regDeadline'];
 
   int get courseID => _courseID;
 
@@ -147,7 +180,7 @@ class Course{
 
   Course._internal();
 
-    factory Course(
+    factory Course.ndjklfhdjkfsd(
                   int _courseID,
                   String _courseTitle,
                   String _courseDesc,
@@ -157,7 +190,7 @@ class Course{
                   String _url,
                   String _location,
                   String _ageGroup,
-                  String _pocName,
+                  String _nameOfPOC,
                   int _contactNumOfPOC,
                   String _startDate,
                   String _regDeadline,
@@ -172,7 +205,7 @@ class Course{
       _inst._url = _url;
       _inst._location = _location;
       _inst._ageGroup = _ageGroup;
-      _inst._pocName = _pocName;
+      _inst._nameOfPOC = _nameOfPOC;
       _inst._contactNumOfPOC = _contactNumOfPOC;
       _inst._startDate = _startDate;
       _inst._regDeadline = _regDeadline;

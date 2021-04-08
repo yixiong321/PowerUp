@@ -302,6 +302,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "rflutter_alert",
+      "rootUri": "file:///C:/Users/anasm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/rflutter_alert-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///C:/Users/anasm/Downloads/Applications/FlutterApp/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -362,6 +368,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "tform",
+      "rootUri": "file:///C:/Users/anasm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/tform-0.9.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.7"
+    },
+    {
       "name": "typed_data",
       "rootUri": "file:///C:/Users/anasm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/typed_data-1.3.0",
       "packageUri": "lib/",
@@ -404,7 +416,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-04-08T02:52:05.654290Z",
+  "generated": "2021-04-08T09:26:05.744326Z",
   "generator": "pub",
   "generatorVersion": "2.12.0"
 }

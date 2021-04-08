@@ -67,9 +67,8 @@ class Session{
 
   Session._internal();
 
-    factory Session(
+    factory Session.no2(
                     int _sessionID,
-                    int _numberOfClasses,
                     String _startDate,
                     String _dateTime,
                     int _vacancy,
@@ -77,7 +76,6 @@ class Session{
                   )
   {
       _inst._sessionID = _sessionID;
-      _inst._numberOfClasses = _numberOfClasses;
       _inst._startDate = _startDate;
       _inst._dateTime = _dateTime;
       _inst._vacancy = _vacancy;

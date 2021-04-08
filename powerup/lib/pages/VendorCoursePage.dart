@@ -204,6 +204,7 @@ class _VendorCoursePageState extends State<VendorCoursePage> {
                           hoverColor: Colors.redAccent,
                           child: Text("Remove Course"),
                           onPressed: (){
+
                             showDialog(
                                 barrierDismissible: false,
                                 context: context,
@@ -220,13 +221,17 @@ class _VendorCoursePageState extends State<VendorCoursePage> {
                                             FlatButton(
                                               child: Text("Confirm"),
                                               onPressed: () {
-                                                vcontroller.removeCourseFromDB(widget.course.courseID);
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                                Navigator.push(context, MaterialPageRoute(
+                                                vcontroller.removeCourseFromDB(widget.course.courseID).then((value) {
+                                                  if (value == true){}
+                                                      Navigator.of(context).pop();
+                                                      Navigator.of(context).pop();
+                                                       Navigator.push(context, MaterialPageRoute(
                                                     builder: (context) => VendorProfile(
                                                         widget.vendor
                                                     )));
+                                                  setState(() {
+                                                  });
+                                                });
                                               },
                                             ),
                                             FlatButton(
