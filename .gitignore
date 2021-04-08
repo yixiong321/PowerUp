@@ -73,3 +73,9 @@ powerup/.idea/workspace.xml
 powerup/.packages
 powerup/android/local.properties
 powerup/assets/MainDB.db
+powerup/.dart_tool/package_config.json
+powerup/.dart_tool/package_config_subset
+powerup/.flutter-plugins
+powerup/android/local.properties
+powerup/ios/Runner/GeneratedPluginRegistrant.h
+powerup/ios/Runner/GeneratedPluginRegistrant.m

@@ -19,7 +19,7 @@ class VendorCoursePage extends StatefulWidget {
 
 class _VendorCoursePageState extends State<VendorCoursePage> {
   ScrollController controller = ScrollController();
-  VendorController vcontroller = VendorController();
+  VendorController vcontroller = VendorController.getInstance();
   List<Widget> participantsData = [];
   List<Widget> sessionsData = [];
   String allSessions = '';
@@ -204,7 +204,7 @@ class _VendorCoursePageState extends State<VendorCoursePage> {
                           hoverColor: Colors.redAccent,
                           child: Text("Remove Course"),
                           onPressed: (){
-
+                            // print("Remove course button pressed, confirmation dialog pops up");
                             showDialog(
                                 barrierDismissible: false,
                                 context: context,
@@ -221,6 +221,7 @@ class _VendorCoursePageState extends State<VendorCoursePage> {
                                             FlatButton(
                                               child: Text("Confirm"),
                                               onPressed: () {
+                                                // print("Confirm button pressed");
                                                 vcontroller.removeCourseFromDB(widget.course.courseID).then((value) {
                                                   if (value == true){}
                                                       Navigator.of(context).pop();

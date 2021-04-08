@@ -21,7 +21,7 @@ class VendorProfile extends StatefulWidget {
 class _VendorProfileState extends State<VendorProfile> {
   TextEditingController controller;
   ScrollController scrollController = ScrollController();
-  VendorController vcontroller = VendorController();
+  VendorController vcontroller = VendorController.getInstance();
   List<Widget> itemsData = [];
 
 
