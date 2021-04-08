@@ -11,24 +11,22 @@ class Course{
   String _url;
   String _location;
   String _ageGroup;
-  String _pocName;
-  int _pocContactNumber;
+  String _nameOfPOC;
+  int _contactNumOfPOC;
   String _startDate;
   String _regDeadline;
   List<Session> sessionList;
 
   Course(
-      this._courseID,
       this._courseTitle,
       this._courseDesc,
       this._company,
-      this._rating,
       this._price,
       this._url,
       this._location,
       this._ageGroup,
-      this._pocName,
-      this._pocContactNumber,
+      this._nameOfPOC,
+      this._contactNumOfPOC,
       this._startDate,
       this._regDeadline,
       );
@@ -38,14 +36,14 @@ class Course{
     'courseID' : _courseID,
     'courseTitle' : _courseTitle,
     'courseDesc' : _courseDesc,
-    'company' : _company,
+    'companyName' : _company,
     'rating' : _rating,
     'price' : _price,
     'url' : _url,
     'location' : _location,
     'ageGroup' : _ageGroup,
-    'pocName' : _pocName,
-    'pocContactNumber' : _pocContactNumber,
+    'nameOfPOC' : _nameOfPOC,
+    'contactNumOfPOC' : _contactNumOfPOC,
     'startDate' : _startDate,
     'regDeadline' : _regDeadline,
     };
@@ -62,8 +60,8 @@ class Course{
     _url = map['url'];
     _location = map['location'];
     _ageGroup = map['ageGroup'];
-    _pocName = map['pocName'];
-    _pocContactNumber = map['pocContactNumber'];
+    _nameOfPOC = map['nameOfPOC'];
+    _contactNumOfPOC = map['contactNumOfPOC'];
     _startDate = map['startDate'];
     _regDeadline = map['regDeadline'];
   }
@@ -121,16 +119,16 @@ class Course{
     _ageGroup = value;
   }
 
-  String get pocName => _pocName;
+  String get nameOfPOC => _nameOfPOC;
 
-  set pocName(String value) {
-    _pocName = value;
+  set nameOfPOC(String value) {
+    _nameOfPOC = value;
   }
 
-  int get pocContactNumber => _pocContactNumber;
+  int get contactNumOfPOC => _contactNumOfPOC;
 
-  set pocContactNumber(int value) {
-    _pocContactNumber = value;
+  set contactNumOfPOC(int value) {
+    _contactNumOfPOC = value;
   }
 
   String get startDate => _startDate;

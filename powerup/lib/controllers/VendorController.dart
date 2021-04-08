@@ -24,23 +24,32 @@ class VendorController {
     return  dbHelper.addCourse(course, sessions);
   }
   ///This function removes an existing course from the vendor
-  Future<bool> removeCourseFromDB(int courseToRemoveID, String vendorEmail) async {
-    return dbHelper.removeCourse(courseToRemoveID, vendorEmail);
+  Future<bool> removeCourseFromDB(int courseToRemoveID) async {
+    return dbHelper.removeCourse(courseToRemoveID);
   }
 
   ///This function retrieves the participants list of a session.
-  Future<List<List<String>>> viewParticipants(int sessionID,int courseID) async {
-    List<List<String>> ListOfParticipantsList;
+  Future<List<List<String>>> viewParticipants(int courseID) async {
+    List<List<String>> ListOfParticipantsList = List<List<String>>();
     List<Session> sessionList = await dbHelper.getSessionsByCourse(courseID);
     for(int i =0;i<sessionList.length;i++){
-      List<String> participantsList;
-      //first element is the sessionID string
-      participantsList.add(sessionID.toString());
-      participantsList = await dbHelper.getRegisterBySession(sessionID);
+      List<String> participantsList = List<String>();
+      participantsList.add("Session "+ (i+1).toString() + ":"); //first element is the sessionID string
+      print('reached before');
+      List<String> iterateList = await dbHelper.getRegisterBySession(sessionList[i].sessionID);
+      print('reached after');
+      for (int j = 0; j<iterateList.length; j++){
+        participantsList.add(iterateList[j]);
+      }
       ListOfParticipantsList.add(participantsList);
-      sessionList.remove(sessionList[i]);
+      //sessionList.remove(sessionList[i]); //sus
     }
-     return ListOfParticipantsList;
+    return ListOfParticipantsList;
+  }
+  //this function retrieves the list of sessions
+  Future<List<Session>> getCourseSessions(int courseID) async{
+    List<Session> sessions = await dbHelper.getSessionsByCourse(courseID);
+    return sessions;
   }
   ///This function retrieves the vacancy of a session.
   Future<int> getVacancyOfSession(int courseID, int sessionID) async{
@@ -54,7 +63,7 @@ class VendorController {
     return vacancy;
   }
 // need to get the vendor's courses from db.
- Future<List<Course>> getVendorCreatedCourses(Vendor vendor){
-    return dbHelper.getVendorCourse(vendor);
+ Future<List<Course>> getVendorCreatedCourses(int contactNumberPoc){
+    return dbHelper.getVendorCourse(contactNumberPoc);
  }
 }

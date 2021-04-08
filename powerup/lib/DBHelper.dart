@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
@@ -10,12 +11,11 @@ import 'package:powerup/entities/Vendor.dart';
 import 'package:powerup/entities/Session.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
-import 'dart:async';
 
 class DBHelper {
   //DATABASE
   static Database _db;
-
+  
   static const String DB_NAME = 'MainDB.db';
 
   //User Table
@@ -24,16 +24,16 @@ class DBHelper {
   static const String dob = 'DOB';
   static const String email = 'emailAddress';
   static const String contactNum = 'contactNum';
-  static const String passU = 'passwordU';
-  static const String NOKname = 'NOKname';
+  static const String passU='passwordU';
+  static const String NOKname='NOKname';
   static const String NOKNum = 'NOKcontactNum';
 
   //Vendor Table
   static const String VendorTABLE = 'Vendor';
   static const String POCName = 'nameOfPOC';
   static const String POCNum = 'contactNumOfPOC';
-  static const String passV = 'passwordV';
-  static const String busRegNum = 'busRegNum';
+  static const String passV='passwordV';
+  static const String busRegNum='busRegNum';
   static const String compName = 'companyName';
 
   //Course Table
@@ -41,14 +41,12 @@ class DBHelper {
   static const String courseID = 'courseID';
   static const String courseTitle = 'courseTitle';
   static const String courseDesc = 'courseDesc';
-
   //static const String compName = 'companyName';
   static const String rating = 'rating';
   static const String price = 'price';
   static const String url = 'url';
   static const String location = 'location';
   static const String ageGroup = 'ageGroup';
-
   //static const String POCName = 'nameOfPOC';
   //static const String POCNum = 'contactNumOfPOC';
   static const String startDate = 'startDate';
@@ -60,7 +58,6 @@ class DBHelper {
   //Session Table
   static const String SessionTABLE = 'Session';
   static const String sessionID = 'sessionID';
-
   //static const String CID = 'courseID'; //check in Course
   static const String numberOfClasses = 'numberOfClasses';
   static const String startDateOfSession = 'startDate';
@@ -115,12 +112,16 @@ class DBHelper {
 
       // Write and flush the bytes written
       await File(path).writeAsBytes(bytes, flush: true);
+
     } else {
       print("Opening existing database");
     }
     // open the database
     var db = await openDatabase(path, readOnly: false);
     return db;
+
+
+
   }
 
   /// This function creates all the tables for the database
@@ -130,8 +131,7 @@ class DBHelper {
         "$dob TEXT,$email TEXT PRIMARY KEY,$contactNum INTEGER, $passU TEXT,"
         "$NOKname TEXT,$NOKNum INTEGER)");
 
-    await db.execute(
-        "CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY, $POCName TEXT, $POCNum INTEGER, $passV TEXT, $busRegNum TEXT, $compName TEXT)");
+    await db.execute("CREATE TABLE $VendorTABLE ($email TEXT PRIMARY KEY, $POCName TEXT, $POCNum INTEGER, $passV TEXT, $busRegNum TEXT, $compName TEXT)");
 
     await db.execute(
         "CREATE TABLE $CourseTABLE ($courseID INTEGER NOT NULL, $courseTitle TEXT NOT NULL, $courseDesc TEXT, $compName TEXT, $rating REAL, $price REAL, $url TEXT, $location TEXT, $ageGroup INTEGER, $POCName TEXT, $POCNum INTEGER, $startDate TEXT, $regDeadline TEXT, PRIMARY KEY(\"courseID\" AUTOINCREMENT))");
@@ -148,15 +148,15 @@ class DBHelper {
         "ON DELETE CASCADE)");
 
     await db //Register
-        .execute(
-        "CREATE TABLE $RegisterTABLE ($email TEXT NOT NULL, $sessionID INTEGER NOT NULL, $courseID INTEGER NOT NULL,"
-            "PRIMARY KEY($email, $sessionID, $courseID),"
-            "FOREIGN KEY($email) REFERENCES $UserTABLE($email)"
-            "ON DELETE CASCADE,"
-            "FOREIGN KEY($sessionID) REFERENCES $SessionTABLE($sessionID)"
-            "ON DELETE CASCADE,"
-            "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID)"
-            "ON DELETE CASCADE)");
+        .execute("CREATE TABLE $RegisterTABLE ($email TEXT NOT NULL, $sessionID INTEGER NOT NULL, $courseID INTEGER NOT NULL,"
+        "PRIMARY KEY($email, $sessionID, $courseID),"
+        "FOREIGN KEY($email) REFERENCES $UserTABLE($email)"
+        "ON DELETE CASCADE,"
+        "FOREIGN KEY($sessionID) REFERENCES $SessionTABLE($sessionID)"
+        "ON DELETE CASCADE,"
+        "FOREIGN KEY($courseID) REFERENCES $CourseTABLE($courseID)"
+        "ON DELETE CASCADE)");
+
   }
 
   /// This function saves a Course object into the CourseTABLE
@@ -168,15 +168,14 @@ class DBHelper {
 
   /// This function saves a User object into the UserTABLE
   Future<User> saveUser(User user) async {
-    print("DBHelper receives: ${user.name} ${user.DOB} ${user.contactNum} ${user
-        .passwordU} ${user.NOKname}, ${user.NOKcontactNum}");
+    print("DBHelper receives: ${user.name} ${user.DOB} ${user.contactNum} ${user.passwordU} ${user.NOKname}, ${user.NOKcontactNum}");
     var dbClient = await db;
     await dbClient.insert(UserTABLE, user.toMap());
     return user;
   }
 
   /// This function saves a Vendor object into the VendorTABLE
-  Future<Vendor> saveVendor(Vendor vendor) async {
+  Future<Vendor> saveVendor(Vendor vendor) async{
     var dbClient = await db;
     await dbClient.insert(VendorTABLE, vendor.toMap());
     return vendor;
@@ -184,30 +183,26 @@ class DBHelper {
 
   /// This function saves a User's email address and the courseID of his favourite
   /// course into the FavTABLE
-  Future<bool> saveFavourite(String email, int courseID) async {
+  Future<bool> saveFavourite(String email, int courseID) async{
     var dbClient = await db;
-    await dbClient.rawInsert(
-        "INSERT INTO Favourite(emailAddress, courseID) VALUES(?,?)",
-        [email, courseID]);
+    await dbClient.execute("INSERT INTO $FavTABLE VALUES email, courseID");
     return true;
   }
 
   /// This function saves a Session object into the SessionTABLE
-  Future<Session> saveSession(Session session) async {
+  Future<Session> saveSession(Session session, int courseID) async {
     var dbClient = await db;
-    await dbClient.insert(SessionTABLE, session.toMap());
+    //await dbClient.insert(SessionTABLE, session.toMap());
+    await dbClient.execute("INSERT INTO $SessionTABLE  ('courseID', 'startDate', 'dateTime', 'vacancy', 'classSize') values (?, ?, ?, ?, ?)",[courseID,session.startDate, session.dateTime, session.vacancy, session.classSize] );
     return session;
   }
 
   /// This function saves a User's email address, his registered sessionID and
   /// the courseID of the Session into the RegisterTABLE
-  Future<bool> saveRegister(int courseID, int sessionID,
-      String userEmail) async {
-    //pass in three objects
+  Future<bool> saveRegister(int courseID, int sessionID, String userEmail) async { //pass in three objects
     var dbClient = await db;
-    await dbClient.rawInsert(
-        "INSERT INTO Register(emailAddress, sessionID, courseID) VALUES(?,?,?)",
-            [userEmail, sessionID, courseID]);
+    await dbClient.rawInsert("INSERT INTO $RegisterTABLE(email, sessionID, courseID) VALUES(?,?)', "
+        "[userEmail, sessionID, courseID]");
     return true;
   }
 
@@ -216,8 +211,8 @@ class DBHelper {
     var dbClient = await db;
     List<Map> maps = await dbClient.rawQuery("SELECT * FROM $CourseTABLE");
     List<Course> courses = [];
-    if (maps.length > 0) {
-      for (int i = 0; i < maps.length; i++) {
+    if(maps.length > 0){
+      for(int i = 0; i < maps.length; i++){
         courses.add(Course.fromMap(maps[i]));
       }
     }
@@ -227,11 +222,10 @@ class DBHelper {
   /// This function returns a Course object given a courseID from the CourseTABLE
   Future<Course> getCourseById(int courseID) async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.rawQuery(
-        "SELECT * FROM $CourseTABLE WHERE courseID = ?", [courseID]);
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $CourseTABLE WHERE courseID = ?", [courseID]);
     List<Course> courses = [];
-    if (maps.length > 0) {
-      for (int i = 0; i < maps.length; i++) {
+    if(maps.length > 0){
+      for(int i = 0; i < maps.length; i++){
         courses.add(Course.fromMap(maps[i]));
       }
     }
@@ -241,8 +235,7 @@ class DBHelper {
   /// This function returns a list of all Users from the UserTABLE
   Future<List<User>> getAllUsers() async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(UserTABLE,
-        columns: [name, dob, email, contactNum, passU, NOKname, NOKNum]);
+    List<Map> maps = await dbClient.query(UserTABLE, columns: [name,dob,email,contactNum,passU,NOKname,NOKNum]);
     //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
     List<User> users = [];
     if (maps.length > 0) {
@@ -256,33 +249,23 @@ class DBHelper {
   /// This function returns a list of all Vendors from the VendorTABLE
   Future<List<Vendor>> getAllVendors() async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(VendorTABLE,
-        columns: [email, POCName, POCNum, passV, busRegNum, compName]);
-    //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
-    // for (int i = 0; i < maps.length; i++) {
-    //   print(maps[i]);
-    // }
+    List<Map> maps = await dbClient.query(VendorTABLE, columns: [email,POCName,POCNum,passV,busRegNum,compName]);
     List<Vendor> vendors = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
         vendors.add(Vendor.fromMap(maps[i]));
-        // print(vendors[i]);
       }
     }
-    // for (int i = 0; i < vendors.length; i++) {
-    //   print(vendors[i].emailAddress);
-    // }
     return vendors;
   }
 
   /// This function returns a list of favourite courses given a User's email address
   Future<List<Course>> getFavForUser(String email) async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.rawQuery(
-        "SELECT $courseID FROM $FavTABLE WHERE $courseID = ? ", [email]);
+    List<Map> maps = await dbClient.rawQuery("SELECT $courseID FROM $FavTABLE WHERE $courseID = ? ", [email]);
     List<Course> courses = [];
-    if (maps.length > 0) {
-      for (int i = 0; i < maps.length; i++) {
+    if(maps.length > 0){
+      for(int i = 0; i < maps.length; i++){
         courses.add(Course.fromMap(maps[i]));
       }
     }
@@ -292,14 +275,7 @@ class DBHelper {
   /// This function returns a list of Sessions from the SessionTABLE
   Future<List<Session>> getAllSessions() async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(SessionTABLE, columns: [
-      sessionID,
-      numberOfClasses,
-      startDateOfSession,
-      dateTime,
-      vacancy,
-      classSize
-    ]);
+    List<Map> maps = await dbClient.query(SessionTABLE, columns: [sessionID, numberOfClasses, startDateOfSession, dateTime, vacancy, classSize ]);
     //List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
     List<Session> sessions = []; //to store entries into a list of <objects>
     if (maps.length > 0) {
@@ -309,7 +285,6 @@ class DBHelper {
     }
     return sessions;
   }
-
   /// This function returns a list of Session objects given a courseID from the
   /// SessionTABLE
   Future<List<Session>> getSessionsByCourse(int courseID) async {
@@ -330,11 +305,11 @@ class DBHelper {
   Future<List<String>> getRegisterBySession(int sessionID) async {
     var dbClient = await db;
     List<Map> maps = await dbClient.rawQuery(
-        "SELECT email FROM $RegisterTABLE WHERE sessionID = ?", [sessionID]);
+      "SELECT emailAddress FROM $RegisterTABLE WHERE sessionID = ?", [sessionID]);
     List<String> register = []; //users who have registered for a session
-    if (maps.length > 0) {
-      for (int i = 0; i < maps.length; i++) {
-        register.add(maps[i]['email']);
+    if(maps.length > 0){
+      for(int i = 0; i < maps.length; i++){
+          register.add(maps[i]['emailAddress']);
       }
     }
     return register;
@@ -345,9 +320,9 @@ class DBHelper {
   Future<List<Course>> getRegisterByUser(String userEmail) async {
     var dbClient = await db;
     List<Map> maps = await dbClient.rawQuery(
-        "SELECT courseID from Register WHERE emailAddress = ?", [userEmail]);
+      "SELECT courseID from $RegisterTABLE WHERE email = ?", [userEmail]);
     List<Course> courseList = [];
-    if (maps.length > 0) {
+    if(maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
         Course course = await getCourseById(maps[i]['courseID']);
         courseList.add(course);
@@ -356,25 +331,22 @@ class DBHelper {
     return courseList;
   }
 
-  Future<List<Course>> getVendorCourse(Vendor vendor) async {
+  Future<List<Course>> getVendorCourse(int contactNumberPoc) async{
     var dbClient = await db;
     List<Map> maps = await dbClient.rawQuery(
-        "SELECT * FROM Course  WHERE contactNumOfPOC = ?",
-        [vendor.contactNumOfPOC]);
+        "SELECT * FROM Course  WHERE contactNumOfPOC = ?", [contactNumberPoc]);
     List<Course> courses = []; //to store entries into a list of <objects>
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
         courses.add(Course.fromMap(maps[i]));
-      }
-    }
-    return courses;
+      }}
+      return courses;
   }
 
   /// This function deletes a Course object given a courseID from the CourseTABLE
   Future<bool> deleteCourse(int courseID) async {
     var dbClient = await db;
-    await dbClient.delete(
-        CourseTABLE, where: '$courseID = ?', whereArgs: [courseID]);
+    await dbClient.delete(CourseTABLE, where: 'courseID = ?', whereArgs: [courseID]);
     return true;
   }
 
@@ -383,8 +355,7 @@ class DBHelper {
   Future<bool> deleteUser(String emailAddress) async {
     var dbClient = await db;
     //delete will return the number of rows affected
-    await dbClient.delete(
-        UserTABLE, where: '$email = ?', whereArgs: [emailAddress]);
+    await dbClient.delete(UserTABLE, where: '$email = ?', whereArgs: [emailAddress]);
     return true;
   }
 
@@ -393,8 +364,7 @@ class DBHelper {
   Future<bool> deleteVendor(String emailAddress) async {
     var dbClient = await db;
     //delete will return the number of rows affected
-    await dbClient.delete(
-        VendorTABLE, where: '$email = ?', whereArgs: [emailAddress]);
+    await dbClient.delete(VendorTABLE, where: '$email = ?', whereArgs: [emailAddress]);
     return true;
   }
 
@@ -402,9 +372,7 @@ class DBHelper {
   /// the FavTABLE
   Future<bool> deleteFavCourseByUser(String emailAddress, int courseID) async {
     var dbClient = await db;
-    await dbClient.rawDelete(
-        "DELETE FROM Favourite WHERE emailAddress = ? AND courseID = ?",
-        [emailAddress, courseID]);
+    await dbClient.rawDelete("SELECT * FROM FavTABLE WHERE email = ? AND courseID = ?", [emailAddress, courseID]);
     return true;
   }
 
@@ -412,9 +380,7 @@ class DBHelper {
   /// from the SessionTABLE
   Future<bool> deleteSession(int sessionID, int courseID) async {
     var dbClient = await db;
-    await dbClient.rawDelete(
-        "SELECT * FROM sessionTable WHERE sessionID = ? AND courseID = ?",
-        [sessionID, courseID]);
+    await dbClient.rawDelete('DELETE FROM Session WHERE sessionID = ? AND courseID = ?', [sessionID, courseID]);
     return true;
   }
 
@@ -422,8 +388,7 @@ class DBHelper {
   /// courseID is removed
   Future<bool> deleteRegisterByCourse(int courseID) async {
     var dbClient = await db;
-    await dbClient.rawDelete(
-        "SELECT * FROM registerTable WHERE courseID = ?", [courseID]);
+    await dbClient.delete(RegisterTABLE, where:'courseID = ?' , whereArgs:[courseID]);
     return true;
   }
 
@@ -431,9 +396,7 @@ class DBHelper {
   /// the User withdraws from a Course
   Future<bool> deleteRegisterByUser(String userEmail, int courseID) async {
     var dbClient = await db;
-    await dbClient.rawDelete(
-        "DELETE FROM Register WHERE emailAddress = ? AND courseID = ?",
-        [userEmail, courseID]);
+    await dbClient.rawDelete("SELECT * FROM $RegisterTABLE WHERE email = ? AND courseID = ?", [userEmail, courseID]);
     return true;
   }
 
@@ -441,8 +404,7 @@ class DBHelper {
   /// sessionID is removed
   Future<bool> deleteRegisterBySession(int sessionID) async {
     var dbClient = await db;
-    await dbClient.rawDelete(
-        "SELECT * FROM registerTable WHERE sessionID = ?", [sessionID]);
+    await dbClient.rawDelete("DELETE FROM Register WHERE sessionID = ?", [sessionID]);
     return true;
   }
 
@@ -450,7 +412,7 @@ class DBHelper {
   Future<bool> updateCourse(Course course) async {
     var dbClient = await db;
     await dbClient.update(CourseTABLE, course.toMap(),
-        where: '$courseID = ?', whereArgs: [course.courseID]);
+      where: '$courseID = ?', whereArgs: [course.courseID]);
     return true;
   }
 
@@ -480,12 +442,10 @@ class DBHelper {
 
   /// This function updates the RegisterTABLE when a new User registers for a
   /// Course/Session
-  Future<bool> updateRegister(int courseID, int sessionID,
-      String userEmail) async {
+  Future<bool> updateRegister(int courseID, int sessionID, String userEmail) async {
     var dbClient = await db;
-    await dbClient.rawUpdate('UPDATE registerTable SET email = ? '
-        'WHERE sessionID = ? AND coursID = ?',
-        [sessionID, courseID]); //IMPT: only updating usermail
+    await dbClient.rawUpdate('UPDATE $RegisterTABLE SET email = ? '
+        'WHERE sessionID = ? AND courseID = ?', [sessionID, courseID]); //IMPT: only updating usermail
     return true;
   }
 
@@ -494,33 +454,42 @@ class DBHelper {
     var dbClient = await db;
     dbClient.close();
   }
-
   /// This function adds sessions into the session database and adds a course into the course database
-  Future<bool> addCourse(Course course, List<Session> sessions) async {
-    for (int i = 0; i < sessions.length; i++) {
-      await saveSession(sessions[i]);
-    }
+  Future<bool> addCourse(Course course,List<Session> sessions) async {
     await saveCourse(course);
+    int courseID = await getLatestCourseID();
+    for (int i = 0; i < sessions.length; i++) {
+      await saveSession(sessions[i], courseID);
+
+    }
     return true;
   }
-
+  ///this function returns the latest, largest courseID
+  Future<int> getLatestCourseID()async {
+    var dbClient = await db;
+    List<int> value = List<int>();
+    var maps = await dbClient.rawQuery(
+        "SELECT MAX(courseID) as latest_id FROM Course;");
+    int courseID = maps.first['latest_id'];
+    return courseID;
+  }
   /// This function gets the email addresses of the participants of a course and sends them a notification.
   /// before removing the relevant data from respective tables.
-  Future<bool> removeCourse(int courseID, String vendorEmail) async {
+  Future<bool> removeCourse(int courseID) async{
     String username = 'powerup_cz3003@gmail.com';
     String password = 'password';
     final smtpServer = gmailSaslXoauth2(username, password);
 
     List<Session> sessions = await getSessionsByCourse(courseID);
-    for (int j = 0; j < sessions.length; j++) {
+    for(int j=0;j<sessions.length;j++){
       List<String> emails = await getRegisterBySession(sessions[j].sessionID);
-      for (int k = 0; k < emails.length; k++) {
+      for (int k=0;k<emails.length;k++){
+
         // Create message
         final message = Message()
           ..from = Address(username, 'PowerUp!')
           ..recipients.add(emails[k])
-          ..subject = 'PowerUp! Course Removal Notification :: ${DateTime
-              .now()}'
+          ..subject = 'PowerUp! Course Removal Notification :: ${DateTime.now()}'
           ..text = '''Apologies. We regret to inform you that the course you have registered for has been removed.\n''';
         //send email to notify participants
         try {
@@ -534,51 +503,19 @@ class DBHelper {
         }
       }
     }
-    for (int i = 0; i < sessions.length; i++) {
-      deleteSession(sessions[i].sessionID, courseID);
+    for(int i=0;i<sessions.length;i++){
+      deleteSession(sessions[i].sessionID,courseID);
     }
     await deleteRegisterByCourse(courseID);
     await deleteCourse(courseID);
     return true;
   }
 
-  Future<List<Course>> getPopularityByCourse(List<Course> list) async {
-    var dbClient = await db;
-    List<Course> courseList = [];
-    List<Map> maps = await dbClient.rawQuery(
-        "SELECT courseID FROM Register GROUP BY courseID ORDER BY COUNT(courseID) DESC");
-    for (int i = 0; i < maps.length; i++) {
-      int i1 = maps[i][courseID];
-      for(int j = 0; j < list.length; j++){
-        int i2 = list[j].courseID;
-        if(i1 == i2){
-          courseList.add(await getCourseById(i1));
-        }
-      }
-    }
-    /*List<Course> courses = await getAllCourses();
-    bool exist = false;
-    for(int i = 0; i < courses.length; i++){
-      print(courses[i].courseID);
-      exist = false;
-      for(int j = 0; j < courseList.length; j++){
-        print(courseList[j].courseID);
-        if(courseList[j].courseID == courses[i].courseID) {
-          exist = true;
-          break;
-        }
-      }
-      print("exist");
-      print(exist);
-      if(exist == false){
-        print("IM HERE");
-        courseList.add(courses[i]);
-      }
-    }*/
-    return courseList;
-  }
-
-/// This function deletes a User from a Session from the SessionTABLE
-/*Future<bool>deleteUserFromSession(String userEmail, int sessionID){
+  /// This function deletes a User from a Session from the SessionTABLE
+  /*Future<bool>deleteUserFromSession(String userEmail, int sessionID){
   }*/
+
+
+
+
 }

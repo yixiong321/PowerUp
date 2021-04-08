@@ -7,7 +7,7 @@ import 'package:powerup/controllers/LoginRegisterController.dart';
 import 'package:powerup/pages/RegisterPage.dart';
 import 'package:powerup/entities/User.dart';
 import 'package:powerup/pages/VendorProfile.dart';
-
+import '../entities/Vendor.dart';
 import '../DBHelper.dart';
 
 class LoginPage extends StatefulWidget {
