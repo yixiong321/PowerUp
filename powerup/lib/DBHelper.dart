@@ -195,9 +195,10 @@ class DBHelper {
   }
 
   /// This function saves a Session object into the SessionTABLE
-  Future<Session> saveSession(Session session) async {
+  Future<Session> saveSession(Session session, int courseID) async {
     var dbClient = await db;
-    await dbClient.insert(SessionTABLE, session.toMap());
+    //await dbClient.insert(SessionTABLE, session.toMap());
+    await dbClient.execute("INSERT INTO $SessionTABLE  ('courseID', 'startDate', 'dateTime', 'vacancy', 'classSize') values (?, ?, ?, ?, ?)",[courseID,session.startDate, session.dateTime, session.vacancy, session.classSize] );
     return session;
   }
 
@@ -268,12 +269,8 @@ class DBHelper {
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
         vendors.add(Vendor.fromMap(maps[i]));
-        // print(vendors[i]);
       }
     }
-    // for (int i = 0; i < vendors.length; i++) {
-    //   print(vendors[i].emailAddress);
-    // }
     return vendors;
   }
 
@@ -333,11 +330,11 @@ class DBHelper {
   Future<List<String>> getRegisterBySession(int sessionID) async {
     var dbClient = await db;
     List<Map> maps = await dbClient.rawQuery(
-        "SELECT email FROM $RegisterTABLE WHERE sessionID = ?", [sessionID]);
+      "SELECT emailAddress FROM $RegisterTABLE WHERE sessionID = ?", [sessionID]);
     List<String> register = []; //users who have registered for a session
-    if (maps.length > 0) {
-      for (int i = 0; i < maps.length; i++) {
-        register.add(maps[i]['email']);
+    if(maps.length > 0){
+      for(int i = 0; i < maps.length; i++){
+          register.add(maps[i]['emailAddress']);
       }
     }
     return register;
@@ -359,11 +356,10 @@ class DBHelper {
     return courseList;
   }
 
-  Future<List<Course>> getVendorCourse(Vendor vendor) async {
+  Future<List<Course>> getVendorCourse(int contactNumberPoc) async{
     var dbClient = await db;
     List<Map> maps = await dbClient.rawQuery(
-        "SELECT * FROM Course  WHERE contactNumOfPOC = ?",
-        [vendor.contactNumOfPOC]);
+        "SELECT * FROM Course  WHERE contactNumOfPOC = ?", [contactNumberPoc]);
     List<Course> courses = []; //to store entries into a list of <objects>
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
@@ -376,8 +372,7 @@ class DBHelper {
   /// This function deletes a Course object given a courseID from the CourseTABLE
   Future<bool> deleteCourse(int courseID) async {
     var dbClient = await db;
-    await dbClient.delete(
-        CourseTABLE, where: '$courseID = ?', whereArgs: [courseID]);
+    await dbClient.delete(CourseTABLE, where: 'courseID = ?', whereArgs: [courseID]);
     return true;
   }
 
@@ -415,9 +410,7 @@ class DBHelper {
   /// from the SessionTABLE
   Future<bool> deleteSession(int sessionID, int courseID) async {
     var dbClient = await db;
-    await dbClient.rawDelete(
-        "SELECT * FROM sessionTable WHERE sessionID = ? AND courseID = ?",
-        [sessionID, courseID]);
+    await dbClient.rawDelete('DELETE FROM Session WHERE sessionID = ? AND courseID = ?', [sessionID, courseID]);
     return true;
   }
 
@@ -425,8 +418,7 @@ class DBHelper {
   /// courseID is removed
   Future<bool> deleteRegisterByCourse(int courseID) async {
     var dbClient = await db;
-    await dbClient.rawDelete(
-        "SELECT * FROM registerTable WHERE courseID = ?", [courseID]);
+    await dbClient.delete(RegisterTABLE, where:'courseID = ?' , whereArgs:[courseID]);
     return true;
   }
 
@@ -446,10 +438,6 @@ class DBHelper {
     var dbClient = await db;
     await dbClient.rawDelete(
         "SELECT * FROM registerTable WHERE sessionID = ?", [sessionID]);
-    return true;
-  }
-
-  /// This function updates the Course object in the CourseTABLE
   Future<bool> updateCourse(Course course) async {
     var dbClient = await db;
     await dbClient.update(CourseTABLE, course.toMap(),
@@ -486,9 +474,8 @@ class DBHelper {
   Future<bool> updateRegister(int courseID, int sessionID,
       String userEmail) async {
     var dbClient = await db;
-    await dbClient.rawUpdate('UPDATE registerTable SET email = ? '
-        'WHERE sessionID = ? AND coursID = ?',
-        [sessionID, courseID]); //IMPT: only updating usermail
+    await dbClient.rawUpdate('UPDATE $RegisterTABLE SET email = ? '
+        'WHERE sessionID = ? AND courseID = ?', [sessionID, courseID]); //IMPT: only updating usermail
     return true;
   }
 
@@ -499,17 +486,27 @@ class DBHelper {
   }
 
   /// This function adds sessions into the session database and adds a course into the course database
-  Future<bool> addCourse(Course course, List<Session> sessions) async {
-    for (int i = 0; i < sessions.length; i++) {
-      await saveSession(sessions[i]);
-    }
+  Future<bool> addCourse(Course course,List<Session> sessions) async {
     await saveCourse(course);
+    int courseID = await getLatestCourseID();
+    for (int i = 0; i < sessions.length; i++) {
+      await saveSession(sessions[i], courseID);
+
+    }
     return true;
   }
-
+  ///this function returns the latest, largest courseID
+  Future<int> getLatestCourseID()async {
+    var dbClient = await db;
+    List<int> value = List<int>();
+    var maps = await dbClient.rawQuery(
+        "SELECT MAX(courseID) as latest_id FROM Course;");
+    int courseID = maps.first['latest_id'];
+    return courseID;
+  }
   /// This function gets the email addresses of the participants of a course and sends them a notification.
   /// before removing the relevant data from respective tables.
-  Future<bool> removeCourse(int courseID, String vendorEmail) async {
+  Future<bool> removeCourse(int courseID) async{
     String username = 'powerup_cz3003@gmail.com';
     String password = 'password';
     final smtpServer = gmailSaslXoauth2(username, password);
@@ -522,8 +519,7 @@ class DBHelper {
         final message = Message()
           ..from = Address(username, 'PowerUp!')
           ..recipients.add(emails[k])
-          ..subject = 'PowerUp! Course Removal Notification :: ${DateTime
-              .now()}'
+          ..subject = 'PowerUp! Course Removal Notification :: ${DateTime.now()}'
           ..text = '''Apologies. We regret to inform you that the course you have registered for has been removed.\n''';
         //send email to notify participants
         try {

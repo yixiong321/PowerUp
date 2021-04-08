@@ -11,7 +11,7 @@ class Course{
   String _url;
   String _location;
   String _ageGroup;
-  String _pocName;
+  String _nameOfPOC;
   int _contactNumOfPOC;
   String _startDate;
   String _regDeadline;
@@ -20,7 +20,6 @@ class Course{
   // Course(
   //     this._courseID,
   //     this._courseTitle,
-  //     this._courseDesc,
   //     this._company,
   //     this._rating,
   //     this._price,
@@ -33,19 +32,18 @@ class Course{
   //     this._regDeadline,
   //     );
 
-
-  Map<String, dynamic> toMap(){
-    var map = <String, dynamic>{
-    'courseID' : _courseID,
+  Course(
+      this._courseTitle,
+      this._courseDesc,
     'courseTitle' : _courseTitle,
     'courseDesc' : _courseDesc,
-    'company' : _company,
+    'companyName' : _company,
     'rating' : _rating,
     'price' : _price,
     'url' : _url,
     'location' : _location,
     'ageGroup' : _ageGroup,
-    'pocName' : _pocName,
+    'nameOfPOC' : _nameOfPOC,
     'contactNumOfPOC' : _contactNumOfPOC,
     'startDate' : _startDate,
     'regDeadline' : _regDeadline,
@@ -64,10 +62,8 @@ class Course{
     _location = map['location'];
     _ageGroup = map['ageGroup'];
     _pocName = map['pocName'];
-    _contactNumOfPOC = map['contactNumOfPOC'];
-    _startDate = map['startDate'];
+    _nameOfPOC = map['nameOfPOC'];
     _regDeadline = map['regDeadline'];
-  }
 
   int get courseID => _courseID;
 
@@ -122,15 +118,15 @@ class Course{
     _ageGroup = value;
   }
 
-  String get pocName => _pocName;
+  String get nameOfPOC => _nameOfPOC;
 
-  set pocName(String value) {
-    _pocName = value;
+  set nameOfPOC(String value) {
+    _nameOfPOC = value;
   }
 
-  int get pocContactNumber => _contactNumOfPOC;
+  int get contactNumOfPOC => _contactNumOfPOC;
 
-  set pocContactNumber(int value) {
+  set contactNumOfPOC(int value) {
     _contactNumOfPOC = value;
   }
 

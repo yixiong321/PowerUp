@@ -10,6 +10,8 @@ import 'package:powerup/pages/VendorProfile.dart';
 
 import '../controllers/LoginRegisterController.dart';
 import '../controllers/LoginRegisterController.dart';
+import '../entities/Vendor.dart';
+import '../DBHelper.dart';
 
 class LoginPage extends StatefulWidget {
   @override
