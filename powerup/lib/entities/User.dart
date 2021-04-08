@@ -9,7 +9,7 @@ class User {
   //String _regCourseList;
   //String _favCourseList;
 
-  User(this._name,this._DOB,this._emailAddress,this._contactNum,this._passwordU,this._NOKname,this._NOKcontactNum);
+  //User(this._name,this._DOB,this._emailAddress,this._contactNum,this._passwordU,this._NOKname,this._NOKcontactNum);
 
   Map<String,dynamic> toMap() {
     var map = <String,dynamic>{
@@ -75,5 +75,31 @@ class User {
 
   set NOKcontactNum(int value) {
     _NOKcontactNum = value;
+  }
+
+    /// Singleton
+  static final User _inst = new User._internal();
+
+  User._internal();
+
+    factory User(
+                  String _name,
+                  String _DOB,
+                  String _emailAddress,
+                  int _contactNum,
+                  String _passwordU,
+                  String _NOKname,
+                  int _NOKcontactNum
+                )
+  {
+    _inst._name = _name;
+    _inst._DOB = _DOB;
+    _inst._emailAddress = _emailAddress;
+    _inst._contactNum = _contactNum;
+    _inst._passwordU = _passwordU;
+    _inst._NOKname = _NOKname;
+    _inst._NOKcontactNum = _NOKcontactNum;
+    
+    return _inst;
   }
 }

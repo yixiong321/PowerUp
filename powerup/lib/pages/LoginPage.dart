@@ -8,7 +8,8 @@ import 'package:powerup/pages/RegisterPage.dart';
 import 'package:powerup/entities/User.dart';
 import 'package:powerup/pages/VendorProfile.dart';
 
-import '../DBHelper.dart';
+import '../controllers/LoginRegisterController.dart';
+import '../controllers/LoginRegisterController.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,7 +22,9 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   var _formKey = GlobalKey<FormState>();
-  var dbHelper = DBHelper().db;
+
+  LoginRegisterController loginRegController = LoginRegisterController.getInstance();
+
   User user;
   @override
   Widget build(BuildContext context) {
@@ -104,9 +107,9 @@ class _LoginPageState extends State<LoginPage> {
                                   onPressed: (){
                                     FocusScope.of(context).requestFocus(FocusNode());
                                     if(_formKey.currentState.validate()){
-                                      LoginRegisterController().login(email.text, password.text).then((loginCheck){
+                                      loginRegController.login(email.text, password.text).then((loginCheck){
                                         if(loginCheck == "user"){
-                                          LoginRegisterController().getUserObj(email.text).then((user){
+                                          loginRegController.getUserObj(email.text).then((user){
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (context) => HomePage(
@@ -117,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                                           
                                         }
                                         else if (loginCheck == "vendor"){
-                                          LoginRegisterController().getVendorObj(email.text).then((vendor){
+                                          loginRegController.getVendorObj(email.text).then((vendor){
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (context) => VendorProfile(

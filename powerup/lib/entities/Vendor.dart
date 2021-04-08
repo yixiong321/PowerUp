@@ -8,8 +8,8 @@ class Vendor{
   String _companyName;
   //List<int> _vendorCourseList;
 
-  Vendor(this._emailAddress, this._nameOfPOC, this._contactNumOfPOC,
-      this._passwordV, this._busRegNum, this._companyName); //this._vendorCourseList);
+  // Vendor(this._emailAddress, this._nameOfPOC, this._contactNumOfPOC,
+  //     this._passwordV, this._busRegNum, this._companyName); //this._vendorCourseList);
 
   Map<String,dynamic> toMap() {
     return {
@@ -74,4 +74,28 @@ class Vendor{
 /*set vendorCourseList(List<int> value) {
     _vendorCourseList = value;
   }*/
+
+    /// Singleton
+  static final Vendor _inst = new Vendor._internal();
+
+  Vendor._internal();
+
+    factory Vendor(
+                  String _emailAddress,
+                  String _nameOfPOC,
+                  int _contactNumOfPOC,
+                  String _passwordV,
+                  String _busRegNum, 
+                  String _companyName
+                  )
+  {
+    _inst._emailAddress = _emailAddress;
+    _inst._nameOfPOC = _nameOfPOC;
+    _inst._contactNumOfPOC = _contactNumOfPOC;
+    _inst._passwordV = _passwordV;
+    _inst._busRegNum = _busRegNum;
+    _inst._companyName = _companyName;
+    
+    return _inst;
+  }
 }

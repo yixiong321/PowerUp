@@ -7,8 +7,8 @@ class Session{
   int _classSize;
   List<String> participantList;
   //---------Constructors---------//
-  Session(this._sessionID, this._numberOfClasses, this._startDate,
-      this._dateTime, this._vacancy, this._classSize, this.participantList);
+  // Session(this._sessionID, this._numberOfClasses, this._startDate,
+  //     this._dateTime, this._vacancy, this._classSize);
   Session.empty();
   //---------Database---------//
   Map<String, dynamic> toMap() {
@@ -68,5 +68,29 @@ class Session{
   void removeFromParticipantList(String participantEmail){
     participantList.remove(participantEmail);
     _vacancy++;
+  }
+
+    /// Singleton
+  static final Session _inst = new Session._internal();
+
+  Session._internal();
+
+    factory Session(
+                    int _sessionID,
+                    int _numberOfClasses,
+                    String _startDate,
+                    String _dateTime,
+                    int _vacancy,
+                    int _classSize,
+                  )
+  {
+      _inst._sessionID = _sessionID;
+      _inst._numberOfClasses = _numberOfClasses;
+      _inst._startDate = _startDate;
+      _inst._dateTime = _dateTime;
+      _inst._vacancy = _vacancy;
+      _inst._classSize = _classSize;
+    
+    return _inst;
   }
 }

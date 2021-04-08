@@ -12,26 +12,27 @@ class Course{
   String _location;
   String _ageGroup;
   String _pocName;
-  int _pocContactNumber;
+  int _contactNumOfPOC;
   String _startDate;
   String _regDeadline;
   List<Session> sessionList;
 
-  Course(
-      this._courseID,
-      this._courseTitle,
-      this._courseDesc,
-      this._company,
-      this._rating,
-      this._price,
-      this._url,
-      this._location,
-      this._ageGroup,
-      this._pocName,
-      this._pocContactNumber,
-      this._startDate,
-      this._regDeadline,
-      );
+  // Course(
+  //     this._courseID,
+  //     this._courseTitle,
+  //     this._courseDesc,
+  //     this._company,
+  //     this._rating,
+  //     this._price,
+  //     this._url,
+  //     this._location,
+  //     this._ageGroup,
+  //     this._pocName,
+  //     this._contactNumOfPOC,
+  //     this._startDate,
+  //     this._regDeadline,
+  //     );
+
 
   Map<String, dynamic> toMap(){
     var map = <String, dynamic>{
@@ -45,7 +46,7 @@ class Course{
     'location' : _location,
     'ageGroup' : _ageGroup,
     'pocName' : _pocName,
-    'pocContactNumber' : _pocContactNumber,
+    'contactNumOfPOC' : _contactNumOfPOC,
     'startDate' : _startDate,
     'regDeadline' : _regDeadline,
     };
@@ -53,7 +54,7 @@ class Course{
   }
 
   Course.fromMap(Map<String,dynamic> map){
-    _courseID = map['id'];
+    _courseID = map['courseID'];
     _courseTitle = map['courseTitle'];
     _courseDesc = map['courseDesc'];
     _company = map['companyName'];
@@ -63,7 +64,7 @@ class Course{
     _location = map['location'];
     _ageGroup = map['ageGroup'];
     _pocName = map['pocName'];
-    _pocContactNumber = map['pocContactNumber'];
+    _contactNumOfPOC = map['contactNumOfPOC'];
     _startDate = map['startDate'];
     _regDeadline = map['regDeadline'];
   }
@@ -127,10 +128,10 @@ class Course{
     _pocName = value;
   }
 
-  int get pocContactNumber => _pocContactNumber;
+  int get pocContactNumber => _contactNumOfPOC;
 
   set pocContactNumber(int value) {
-    _pocContactNumber = value;
+    _contactNumOfPOC = value;
   }
 
   String get startDate => _startDate;
@@ -143,5 +144,43 @@ class Course{
 
   set regDeadline(String value) {
     _regDeadline = value;
+  }
+
+  /// Singleton
+  static final Course _inst = new Course._internal();
+
+  Course._internal();
+
+    factory Course(
+                  int _courseID,
+                  String _courseTitle,
+                  String _courseDesc,
+                  String _company,
+                  double _rating,
+                  double _price,
+                  String _url,
+                  String _location,
+                  String _ageGroup,
+                  String _pocName,
+                  int _contactNumOfPOC,
+                  String _startDate,
+                  String _regDeadline,
+                  )
+  {
+      _inst._courseID = _courseID;
+      _inst._courseTitle = _courseTitle;
+      _inst._courseDesc = _courseDesc;
+      _inst._company = _company;
+      _inst._rating = _rating;
+      _inst._price = _price;
+      _inst._url = _url;
+      _inst._location = _location;
+      _inst._ageGroup = _ageGroup;
+      _inst._pocName = _pocName;
+      _inst._contactNumOfPOC = _contactNumOfPOC;
+      _inst._startDate = _startDate;
+      _inst._regDeadline = _regDeadline;
+    
+    return _inst;
   }
 }

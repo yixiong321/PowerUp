@@ -28,7 +28,7 @@ class VerificationPage extends StatefulWidget {
   String companyPassword;
 
 
-  LoginRegisterController lr_controller = new LoginRegisterController();
+  LoginRegisterController loginRegController = LoginRegisterController.getInstance();
 
   // receive data from the FirstScreen as a parameter
   /// VerificationPage({this.email, this.otpcontroller});
@@ -202,7 +202,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
                             if(verify()) {
                               if (widget.companyEmail == null) {
                                 /// user creation
-                                widget.lr_controller.createUser(
+                                widget.loginRegController.createUser(
                                     widget.name,
                                     widget.dob,
                                     widget.userEmail,
@@ -221,7 +221,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
                               }
                               else if (widget.userEmail == null) {
                                 /// vendor creation
-                                widget.lr_controller.createVendor(
+                                widget.loginRegController.createVendor(
                                     widget.companyEmail, widget.nameOfPoc,
                                     widget.companyNumber, widget.companyPassword,
                                     widget.brn, widget.companyName).then((
@@ -303,7 +303,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
                               ///verification code update
                               if (widget.companyEmail == null) {
                                 /// user creation
-                                widget.lr_controller.createUser(
+                                widget.loginRegController.createUser(
                                     widget.name,
                                     widget.dob,
                                     widget.userEmail,
@@ -322,7 +322,7 @@ class _VerificationPageState extends State<VerificationPage> with TickerProvider
                               }
                               else if (widget.userEmail == null) {
                                 /// vendor creation
-                                widget.lr_controller.createVendor(
+                                widget.loginRegController.createVendor(
                                     widget.companyEmail, widget.nameOfPoc,
                                     widget.companyNumber, widget.companyPassword,
                                     widget.brn, widget.companyName).then((

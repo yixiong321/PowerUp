@@ -6,16 +6,18 @@ import 'package:powerup/entities/Course.dart';
 import 'dart:async';
 import 'package:powerup/DBHelper.dart';
 
+import '../entities/Vendor.dart';
+
 /// This class handles the adding of a new course, removing an existing course, view participants of a session
 /// and retrieval of vacancy of an existing session.
 class VendorController {
 
   /// Stores the current vendor
   static Vendor vendor;
-  DBHelper dbHelper = new DBHelper();
+  DBHelper dbHelper = DBHelper.getInstance();
 
   ///This is the constructor for the class.
-  VendorController();
+  /// VendorController();
 
 
   //ui call constructor for courses and session first
@@ -57,4 +59,14 @@ class VendorController {
  Future<List<Course>> getVendorCreatedCourses(Vendor vendor){
     return dbHelper.getVendorCourse(vendor);
  }
+
+  /// Singleton
+  static VendorController single_instance = null; 
+    static VendorController getInstance() 
+    { 
+        if (single_instance == null) 
+            single_instance = new VendorController(); 
+  
+        return single_instance; 
+    }
 }

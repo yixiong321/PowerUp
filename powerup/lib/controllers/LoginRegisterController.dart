@@ -9,7 +9,13 @@ import 'package:powerup/DBHelper.dart';
 import 'package:powerup/entities/User.dart';
 import 'package:powerup/entities/Vendor.dart';
 
+import '../DBHelper.dart';
+import '../DBHelper.dart';
+import '../DBHelper.dart';
+
 class LoginRegisterController{
+
+  DBHelper dbHelper = DBHelper.getInstance();
 
 /*
   static bool accountInDB(String email, String password){
@@ -21,7 +27,7 @@ class LoginRegisterController{
 */
 
   Future<User> getUserObj(String emailAddress) async {
-    var users = await DBHelper().getAllUsers();  /// Get list of User objects
+    var users = await dbHelper.getAllUsers();  /// Get list of User objects
         /// check if the id attribute matches
         for (int i = 0; i < users.length; i++) {
           if (users[i].emailAddress == emailAddress)
@@ -32,7 +38,7 @@ class LoginRegisterController{
   
 
   Future<Vendor> getVendorObj(String emailAddress) async {
-    var vendors = await DBHelper().getAllVendors();  /// Get list of User objects
+    var vendors = await dbHelper.getAllVendors();  /// Get list of User objects
         /// check if the id attribute matches
         for (int i = 0; i < vendors.length; i++) {
           if (vendors[i].emailAddress == emailAddress)
@@ -86,7 +92,7 @@ class LoginRegisterController{
       final bool isValid = EmailValidator.validate(email);
       if (isValid == true) {
         /// format is okay, check database for match
-        var users = await DBHelper().getAllUsers();  /// Get list of User objects
+        var users = await dbHelper.getAllUsers();  /// Get list of User objects
         /// check if the id attribute matches
         for (int i = 0; i < users.length; i++) {
           if (users[i].emailAddress == email)
@@ -179,8 +185,8 @@ VIGNESH123! : false
     /// Perform hashing for comparison with stored password later
     String hashedPassword = generateHash(password); //password;
     try {
-      var userAccounts = await DBHelper().getAllUsers();
-      var vendorAccounts = await DBHelper().getAllVendors();
+      var userAccounts = await dbHelper.getAllUsers();
+      var vendorAccounts = await dbHelper.getAllVendors();
       // for (int i = 0; i < vendorAccounts.length; i++) {
       //   print(vendorAccounts[i].emailAddress);
       // }
@@ -270,7 +276,7 @@ VIGNESH123! : false
     /// Format data in User object to pass to DB class so that DBHelper can write to DB under one single user
     try {
       User user = new User(name, dob, email, contactNum, hashedPassword, nokName, nokContactNum);
-      User saveResult = await DBHelper().saveUser(user);
+      User saveResult = await dbHelper.saveUser(user);
     } catch (e) {
       print(e);
       return null;
@@ -302,7 +308,7 @@ Future<Vendor> createVendor(String emailAddress, String nameOfPOC, int contactNu
     /// Format data in User object to pass to DB class so that DBHelper can write to DB under one single user
     try {
       Vendor vendor = new Vendor(emailAddress, nameOfPOC, contactNumOfPOC, hashedPassword, busRegNum, companyName);
-      Vendor saveResult = await DBHelper().saveVendor(vendor);
+      Vendor saveResult = await dbHelper.saveVendor(vendor);
     } catch (e) {
       print(e);
       return null;
@@ -313,6 +319,16 @@ Future<Vendor> createVendor(String emailAddress, String nameOfPOC, int contactNu
     else
       return vendor;
   }
+
+  /// Singleton
+  static LoginRegisterController single_instance = null; 
+    static LoginRegisterController getInstance() 
+    { 
+        if (single_instance == null) 
+            single_instance = new LoginRegisterController(); 
+  
+        return single_instance; 
+    }
 
 /*In UI, run following functions: checkDetails, sendValidationEmail (returns codeGenerated) -
   which can be compared to code user enters in text field, and createUser/createVendor (returns String)*/
